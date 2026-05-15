@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@layer base {
+    html {
+        @apply overscroll-none;
+    }
+}
+
+@theme {
+
+	/* COLOURS */
+    --color-primary-blue: #264688;
+    --color-primary-green: #2ca69e;
+    --color-primary-yellow: #ffc72c;
+
+    --color-hover-blue: #1b3360;
+    --color-hover-green: #248781 ;
+    /* --color-hover-yellow: ; */
+
+
+    --color-error-bg: #F8D7DA;
+    /* --color-error-btn: #C64B4B; */
+    --color-error-text: #721C24;
+
+    --color-good-bg: #DFF0D8;
+    --color-good-btn: #5CB85C;
+    --color-good-text: #155724;
+
+
+
+	/* ANIMATIONS */
+
+	/* pop animation */
+	--animate-pop: pop 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+	@keyframes pop {
+		from { opacity: 0; transform: scale(0.92); }
+		to   { opacity: 1; transform: scale(1); }
+	}
+
+	/* ease top */
+	--animate-ease: fadeIn 0.5s ease;
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(0) }
+        from { opacity: 0; transform: translateY(1rem) }
+    }
+	
+
+
+
+
+}

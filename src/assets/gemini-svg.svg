@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="letter-a" viewBox="0 0 100 100">
+    <path d="M20,80 L50,20 L80,80 M35,55 L65,55" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-b" viewBox="0 0 100 100">
+    <path d="M30,20 L30,80 M30,20 Q70,20 70,35 Q70,50 30,50 Q70,50 70,65 Q70,80 30,80" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-c" viewBox="0 0 100 100">
+    <path d="M70,30 Q30,30 30,50 Q30,70 70,70" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-d" viewBox="0 0 100 100">
+    <path d="M30,20 L30,80 Q80,80 80,50 Q80,20 30,20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-e" viewBox="0 0 100 100">
+    <path d="M70,20 L30,20 L30,80 L70,80 M30,50 L60,50" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-f" viewBox="0 0 100 100">
+    <path d="M70,20 L30,20 L30,80 M30,50 L60,50" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-g" viewBox="0 0 100 100">
+    <path d="M70,30 Q30,30 30,50 Q30,70 70,70 L70,50 L50,50" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-h" viewBox="0 0 100 100">
+    <path d="M30,20 L30,80 M70,20 L70,80 M30,50 L70,50" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-i" viewBox="0 0 100 100">
+    <path d="M50,20 L50,80 M30,20 L70,20 M30,80 L70,80" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-j" viewBox="0 0 100 100">
+    <path d="M60,20 L60,70 Q60,80 40,80 Q20,80 20,70" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-k" viewBox="0 0 100 100">
+    <path d="M30,20 L30,80 M70,20 L30,50 L70,80" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-l" viewBox="0 0 100 100">
+    <path d="M35,20 L35,80 L70,80" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-m" viewBox="0 0 100 100">
+    <path d="M20,80 L20,20 L50,50 L80,20 L80,80" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-n" viewBox="0 0 100 100">
+    <path d="M30,80 L30,20 L70,80 L70,20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-o" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-p" viewBox="0 0 100 100">
+    <path d="M30,80 L30,20 L55,20 Q75,20 75,35 Q75,50 55,50 L30,50" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-q" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M65,65 L85,85" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="letter-r" viewBox="0 0 100 100">
+    <path d="M30,80 L30,20 L55,20 Q75,20 75,35 Q75,50 55,50 L30,50 M55,50 L75,80" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-s" viewBox="0 0 100 100">
+    <path d="M70,30 Q30,20 30,40 Q30,50 50,55 Q70,60 70,70 Q70,85 30,80" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-t" viewBox="0 0 100 100">
+    <path d="M50,20 L50,80 M20,20 L80,20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-u" viewBox="0 0 100 100">
+    <path d="M30,20 L30,60 Q30,80 50,80 Q70,80 70,60 L70,20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-v" viewBox="0 0 100 100">
+    <path d="M20,20 L50,80 L80,20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-w" viewBox="0 0 100 100">
+    <path d="M10,20 L25,80 L50,40 L75,80 L90,20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-x" viewBox="0 0 100 100">
+    <path d="M25,20 L75,80 M75,20 L25,80" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-y" viewBox="0 0 100 100">
+    <path d="M25,20 L50,50 L75,20 M50,50 L50,80" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="letter-z" viewBox="0 0 100 100">
+    <path d="M25,20 L75,20 L25,80 L75,80" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>
