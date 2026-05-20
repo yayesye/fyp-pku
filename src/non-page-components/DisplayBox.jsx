@@ -58,7 +58,7 @@ export function GoodBox ({onDismiss, message}) {
 }
 
 
-export function NeutralBox ({onDismiss, message}) {
+export function NeutralBox ({Yes, No, message}) {
     return createPortal(
         // this the background blur
         <div className=" bg-black/50 backdrop-blur-sm inset-0 fixed flex items-center justify-center h-screen w-screen">
@@ -71,9 +71,18 @@ export function NeutralBox ({onDismiss, message}) {
                         <i className="fas text-lg fa-exclamation-triangle"></i>
                         <h1 className="inline-block pl-3 text-black font-bold ">{message || 'NULL' }</h1>
                     </div>
-                        <div onClick={onDismiss} className="flex ml-auto mt-4 p-2 min-w-22 max-w-35 justify-center rounded-xl bg-gray-500 text-white text-center cursor-pointer">
-                        <h1>Continue</h1>
+                    
+                    <div className="flex">
+                        <div onClick={Yes} className="flex ml-auto mt-4 p-2 min-w-22 max-w-35 justify-center rounded-xl bg-gray-500 text-white text-center cursor-pointer">
+                            <h1>Yes</h1>
+                        </div>
+                        <div onClick={No} className="flex ml-4 mt-4 p-2 min-w-22 max-w-35 justify-center rounded-xl bg-gray-500 text-white text-center cursor-pointer">
+                            <h1>No</h1>
+                        </div>
                     </div>
+                    
+                    
+                    
                 </div>
                 
             </div>

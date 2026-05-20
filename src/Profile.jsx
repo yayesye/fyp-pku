@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { fetchCurrentUser, supabase } from "./non-page-components/supabaseDB"
+import { fetchAllPosts, fetchCurrentUser, supabase } from "./non-page-components/supabaseDB"
 import Loading from "./non-page-components/Loading"
+import { ErrorBox, GoodBox, NeutralBox } from "./non-page-components/DisplayBox"
 
 export default function Profile () {
 
@@ -16,31 +17,42 @@ export default function Profile () {
     const [ProfilePosts, setProfilePosts] = useState()
 
     const [loading, setloading] = useState(true)
+
+    const [Del, setDel] = useState(false)
+    const [Success, setSuccess] = useState(false)
+
+
+
     
     // console.log(param.userid)
+
+    async function fetchProfilePosts() {
+        const {data, error} = await supabase.from('BulletinPosts').select('postID, title, status, FileAttachment(fileURL)').eq('userID',param.userid)
+        setProfilePosts(data)
+    }
 
     useEffect(()=>{
 
         setloading(true)
 
-        // async function fetchProfileUser() {
-        //     const {data , error} = await supabase.from('Users').select('*').eq('userID', param.userid).single()
-        //     setProfile(data)
-        //     setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${data.userName[0]}`)
-        // } param && fetchProfileUser()
-
         param && fetchCurrentUser(setProfile)
 
-        async function fetchProfilePosts() {
-            const {data, error} = await supabase.from('BulletinPosts').select('postID, title, status, FileAttachment(fileURL)').eq('userID',param.userid)
-            setProfilePosts(data)
-        }fetchProfilePosts()
+        fetchProfilePosts()
 
         setTimeout(() => {
             setloading(false)
         }, 200);
 
     },[])
+
+    async function handleDelete(postid) {
+        const {error} = await supabase.from('BulletinPosts').delete('*').eq('postID',postid)
+        if (error) console.log('Error: ',error)
+
+        setDel(false)
+        setSuccess(true)
+
+    }    
 
     // console.log(ProfilePosts)
 
@@ -64,7 +76,7 @@ export default function Profile () {
                 <h2 className=" text-xl"> {profile?.userRole} </h2>
             </div>
 
-
+            {console.log(ProfilePosts)}
             <div className="p-5 flex gap-5 flex-wrap">
                 {
                 ProfilePosts?.map(p => (
@@ -92,10 +104,14 @@ export default function Profile () {
                                 <i className="fas fa-edit mr-2 invert"></i>
                                 <span className=" text-white">Edit</span>
                             </button>
-                            <button value="Delete"  className="p-2 rounded-md bg-red-700 min-w-25 cursor-pointer hover:bg-red-500" >
+                            <button 
+                            onClick={()=>setDel(true)}
+                            value="Delete"  className="p-2 rounded-md bg-red-700 min-w-25 cursor-pointer hover:bg-red-500" >
                                 <i className="fas fa-trash mr-2 invert"></i>
                                 <span className=" text-white">Delete</span>
                             </button>
+                            {Del && <NeutralBox message={'Delete Posts?'} Yes={()=>handleDelete(p.postID)} No={ ()=>setDel(false) } />}
+                            {Success && <GoodBox message='Post Deleted!' onDismiss={ ()=> {setSuccess(false), fetchProfilePosts()} } />}
                         </div>
                         }
 
