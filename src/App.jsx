@@ -12,7 +12,7 @@ import CreatePosts from './CreatePosts.jsx';
 import Profile from './Profile.jsx';
 import Loading from './non-page-components/Loading.jsx';
 import EditPosts from './EditPosts.jsx';
-// import MakeAnnouncement from './MakeAnnouncement.jsx';
+import MakeAnnouncement from './MakeAnnouncement.jsx';
 
 
 // import Comment from './Comment.jsx'
