@@ -19,10 +19,6 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
 })
 
 
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient('https://<project-ref>.supabase.co', '<anon-or-publishable-key>')
-
 const channel = supabase
   .channel('bulletin_posts:global', { config: { private: true } })
   .on('broadcast', { event: 'INSERT' }, (payload) => console.log('insert', payload))
