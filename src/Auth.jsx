@@ -1,6 +1,6 @@
 // import * as supa from './supabaseDB.jsx'
 
-import { supabase } from "./non-page-components/supabaseDB";
+import { fetchCurrentUser, supabase } from "./non-page-components/supabaseDB";
 import { useState, useEffect } from "react"
 import { Link, Links, useNavigate } from "react-router-dom";
 
@@ -81,6 +81,13 @@ export default function Auth() {
 
         
     }    
+
+    const [test, settest] = useState()
+
+    useEffect(()=>{
+        fetchCurrentUser(settest)
+    },[])
+    
     
 
     if (loading) return <Loading />

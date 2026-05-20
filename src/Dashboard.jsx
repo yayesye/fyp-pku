@@ -1,12 +1,16 @@
 
 import { useState,useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { supabase } from './non-page-components/supabaseDB';
+import { supabase, fetchCurrentUser } from './non-page-components/supabaseDB';
 
 import {ErrorBox, GoodBox} from './non-page-components/DisplayBox'
+import NotifPanel from './non-page-components/NotifPanel';
 
 import Posts from './Posts';
 import Loading from './non-page-components/Loading';
+import { createPortal } from 'react-dom';
+
+
 
 
 export default function Dashboard () {
@@ -27,6 +31,8 @@ export default function Dashboard () {
     const [Role, setRole] = useState(false)
 
     const [loading, setloading] = useState(true)
+    const [Panel, setPanel] = useState(false)
+    const [closePanel, setClosePanel] = useState(false)
 
     const sleep = (ms) => { new Promise(e => setTimeout(e,ms)) }
 
@@ -63,41 +69,45 @@ export default function Dashboard () {
     
     useEffect(() => {
 
+
+        fetchCurrentUser(setUser)
+
         setloading(true)
 
         // CHANGE TITLE NAME 
         document.title = "Dashboard"
 
-        async function fetchUser() {
+        // THIS IS THE OLD FETCH USER, NOW I USE FETCH USER FROM SUPABASE COMPONENT INSTEAD
+        // async function fetchUser() {
             
-            const {data: {user}} = await supabase.auth.getUser()
-            const userid = user.id
-            setuserid(userid)
+        //     const {data: {user}} = await supabase.auth.getUser()
+        //     const userid = user.id
+        //     setuserid(userid)
 
 
-            const { data, error } = await supabase.from('Users').select('userName, userRole').eq('userID', userid).single()
+        //     const { data, error } = await supabase.from('Users').select('userName, userRole').eq('userID', userid).single()
 
-            if (error) {
-                console.error('Error fetching:', error)
-                return
-            }
+        //     if (error) {
+        //         console.error('Error fetching:', error)
+        //         return
+        //     }
 
-            // console.log('Current user id: '+userid)
-            // console.log('Current user name: '+data.userName)
-            // console.log('Current user role: '+data.userRole)
-            // console.log(data)
+        //     // console.log('Current user id: '+userid)
+        //     // console.log('Current user name: '+data.userName)
+        //     // console.log('Current user role: '+data.userRole)
+        //     // console.log(data)
 
-            if (!data.userName){
-                setUser({userName: 'Anonymous', userRole: 'Anonymous'})
-                setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=A`)
-            }
+        //     if (!data.userName){
+        //         setUser({userName: 'Anonymous', userRole: 'Anonymous'})
+        //         setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=A`)
+        //     }
 
-            // console.log(data.userName)
+        //     // console.log(data.userName)
 
-            setUser(data)
-            setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${data.userName[0]}`)
+        //     setUser(data)
+        //     setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${data.userName[0]}`)
 
-        }
+        // }
 
 
         async function fetchAllPosts() {
@@ -121,9 +131,12 @@ export default function Dashboard () {
         }
 
         function fetchAll() {
-            fetchUser()
+
+            // fetch current user is from supabase component
+            fetchCurrentUser(setUser)
+            // fetchUser()
             fetchAllPosts()
-            setTimeout(()=>{setloading(false)},800)
+            setTimeout(()=>{setloading(false)},200)
             // setloading(false)
         }fetchAll()
 
@@ -135,7 +148,8 @@ export default function Dashboard () {
     if (loading) return <Loading />
 
     return (
-        <div className="bg-gray-100 min-h-screen">
+        <div className={`bg-gray-100 min-h-screen overflow-x-hidden ${open? 'block': 'hidden'} `}>
+
             <header className="bg-white shadow flex h-20 items-center pl-10">
                 {/* icon and horn */}
                 <div className="bg-primary-green aspect-square h-3/5 rounded-md items-center flex justify-center">
@@ -146,17 +160,28 @@ export default function Dashboard () {
                     <h2 className="text-sm text-[#7B8794]">Universiti Malaysia Pahang Sultan Abdullah</h2>
                 </div>
 
+
+                {/* this is the notification bar */}
+                {/* <div className='ml-auto'>
+                    <i className='fas fa-bell text-primary-yellow cursor-pointer text-3xl'
+                    onClick={()=>setPanel(true)}
+                    ></i>
+                    <NotifPanel open={Panel} func={()=>setPanel(false)} />
+                </div> */}
+
+
+
                 {/* this is the user icon things */}
-                <div className='ml-auto pl-10 md:pr-10 flex group cursor-pointer h-full items-center'>
-                    <div className='ml-auto mr-4 h-full content-center '>
-                        <img src={pfp} className='rounded-full aspect-square h-11' alt="this the user pfp" /> 
+                <div className=' w-40 flex justify-end group cursor-pointer h-full ml-auto items-center'>
+                    <div className=' mr-4 h-full content-center '>
+                        <img src={user?.pfp} className='rounded-full aspect-square h-11' alt="this the user pfp" /> 
                     </div>
-                    <div className='hidden md:block'>
-                        <h1 className="text-lg text-center font-bold text-primary-blue"> {user.userName} </h1>
-                        <div className='bg-primary-blue rounded-md pl-2 pr-2 p-1'><h2 className=" text-center text-primary-yellow font-bold text-xs"> {user.userRole} </h2></div>
+                    <div className='hidden md:block md:mr-5'>
+                        <h1 className="text-lg text-center font-bold text-primary-blue"> {user?.userName} </h1>
+                        <div className='bg-primary-blue rounded-md pl-2 pr-2 p-1'><h2 className=" text-center text-primary-yellow font-bold text-xs"> {user?.userRole} </h2></div>
                     </div>
 
-                    <div onClick={handleLogout} className=' hidden group-hover:flex cursor-pointer absolute top-20 w-45 right-0 bg-red-300 justify-center p-3 hover:bg-red-600 shadow'>
+                    <div onClick={handleLogout} className=' hidden group-hover:flex cursor-pointer absolute top-20 w-40 right-0 bg-red-300 justify-center p-3 hover:bg-red-600 shadow'>
                         <i className="fas fa-sign-out-alt fa-xl text-primary-blue self-center content-center h-full"></i>
                         <h2 className='font-bold inline '>Logout</h2>
                     </div>
@@ -171,14 +196,18 @@ export default function Dashboard () {
             
             {user.userRole === 'STAFF' && 
             <div className='flex flex-col md:flex-row'>
-                <div className=' md:w-1/2 h-20 bg-primary-blue hover:bg-hover-blue m-5 rounded-xl cursor-pointer flex items-center justify-center gap-5' onClick={() => navigate('/create')}>
+                <div className=' md:w-1/2 h-20 bg-primary-blue hover:bg-hover-blue m-5 rounded-xl cursor-pointer flex items-center justify-center gap-3' onClick={() => navigate('/create')}>
                     <i className='fas fa-plus fa-xl pt-1 invert'></i>
                     <h2 className='text-white text-center font-bold text-xl '>Create New Posts</h2>
                 </div>
                 {/* {console.log(userid)} */}
-                <div className=' md:w-1/2 m-5 mt-0 md:mt-5 h-20 bg-primary-green hover:bg-hover-green rounded-xl cursor-pointer flex items-center justify-center gap-5' onClick={() => navigate(`/profile/${userid}`)}>
+                <div className=' md:w-1/2 m-5 mt-0 md:mt-5 h-20 bg-primary-green hover:bg-hover-green rounded-xl cursor-pointer flex items-center justify-center gap-3' onClick={() => navigate(`/profile/${user.userID}`)}>
                     <i className='fas fa-edit fa-xl invert'></i>
                     <h2 className='text-white text-center font-bold text-xl '>Edit Posts</h2>                    
+                </div>
+                <div className=' md:w-1/2 m-5 mt-0 md:mt-5 h-20 bg-primary-yellow hover:bg-hover-yellow rounded-xl cursor-pointer flex items-center justify-center gap-3' onClick={() => navigate(`/announcement`)}>
+                    <i className='fas fa-bell fa-xl invert'></i>
+                    <h2 className='text-white text-center font-bold text-xl '>Announcement</h2>                    
                 </div>
             </div>
             }
@@ -194,7 +223,7 @@ export default function Dashboard () {
                 {
                 post?.map(p => (
                     <div key={p.postID} className="bg-white rounded-xl p-8 w-full shadow cursor-pointer hover:shadow-md"
-                        onClick={() => navigate(`/posts/${p.postID}`)}>
+                        onClick={() => navigate(`/posts/${p?.postID}`)}>
 
                         <div>
                             {p.FileAttachment?.fileURL 
@@ -203,7 +232,7 @@ export default function Dashboard () {
                             } 
                         </div>
 
-                        <span className="font-bold text-primary-blue text-2xl hover:underline text-wrap ">{p.title}</span>
+                        <h1 className="font-bold text-primary-blue text-2xl hover:underline truncate">{p.title}</h1>
                         <div className='flex items-center gap-2 mt-5'>
                             <span>Made by:</span>
                             <img className='rounded-full max-h-7' src={`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${p.Users?.userName[0]}`}/>

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
 import { supabase } from "./non-page-components/supabaseDB"
+import { NeutralBox } from "./non-page-components/DisplayBox"
 
 function Comments({ comment, onReply, onDelete, currentUserid }) {
     const [showReplyBox, setShowReplyBox] = useState(false)
     const [replyContent, setReplyContent] = useState("")
+    const [delComment, setdelComment] = useState()
 
     function handleReply() {
         if (!replyContent.trim()) return
@@ -13,20 +15,22 @@ function Comments({ comment, onReply, onDelete, currentUserid }) {
     }
 
     return (
-        <div className="p-5 bg-gray-300">
-            <div className="flex justify-between items-start">
+        <div className="p-5 pt-0 bg-gray-100">
+            <div className="flex items-start h-full">
                 <div className="flex">
-                    <img src='https://i.ibb.co/BV7x9PHY/Screenshot-2024-10-23-162325.png' className="rounded-full aspect-square max-h-8" />
-                    <h1 className="font-bold content-center ml-2">{comment.Users.userName}</h1>
+                    {/* <img src='' className="rounded-full aspect-square max-h-8" /> */}
+                    <h1 className="font-bold content-center ml-2 border-b-2">{comment.Users.userName}</h1>
                 </div>
+                
 
                 {/* delete button - only shown to the comment's author */}
                 {currentUserid === comment.userID && (
-                    <button
-                        onClick={() => onDelete(comment.commentID)}
-                        className="text-sm p-1 text-white rounded-md bg-red-500 cursor-pointer">
-                        Delete
-                    </button>
+                    <div 
+                    onClick={()=>{setdelComment('Delete Comment?')}}
+                    // onClick={() => onDelete(comment.commentID)}
+                    className="cursor-pointer p-0.5 text-red-500 hover:underline rounded-lg ml-8 ">
+                        <p>Delete</p>
+                    </div>
                 )}
             </div>
 
@@ -37,7 +41,7 @@ function Comments({ comment, onReply, onDelete, currentUserid }) {
             {/* reply button */}
             <button
                 onClick={() => setShowReplyBox(!showReplyBox)}
-                className="text-sm p-1 text-white rounded-md bg-primary-blue mt-2 cursor-pointer">
+                className="text-sm p-1 text-white rounded-md bg-primary-blue mt-5 cursor-pointer">
                 {showReplyBox ? "Cancel" : "Reply"}
             </button>
 
@@ -59,7 +63,7 @@ function Comments({ comment, onReply, onDelete, currentUserid }) {
             )}
 
             {/* recursion - renders replies of replies */}
-            <div className="pl-8 border-l-2 border-gray-400">
+            <div className="mt-3 ml-4 border-l-2 border-gray-400">
                 {comment.replies.map(reply => (
                     <Comments
                         key={reply.commentID}
@@ -70,12 +74,14 @@ function Comments({ comment, onReply, onDelete, currentUserid }) {
                     />
                 ))}
             </div>
+
+            {delComment && <NeutralBox message={delComment} onDismiss={()=>onDelete(comment.commentID)} /> }
         </div>
     )
 }
 
 
-export default function CommentSection({ postid }) {
+export default function CommentSection({ postid, refresh }) {
 
     const [formattedData, setFormattedData] = useState()
     const [userid, setUserid] = useState()
@@ -100,7 +106,7 @@ export default function CommentSection({ postid }) {
             else setFormattedData(buildTree(data))
         }
         fetchComments()
-    }, [postid])
+    }, [postid, refresh])
 
 
     function buildTree(rows) {
@@ -150,7 +156,7 @@ export default function CommentSection({ postid }) {
     }
 
     return (
-        <div>
+        <div className="mt-10">
             {formattedData?.map(comment => (
                 <Comments
                     key={comment.commentID}

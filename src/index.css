@@ -4,6 +4,7 @@
     html {
         @apply overscroll-none;
     }
+
 }
 
 @theme {
@@ -11,11 +12,12 @@
 	/* COLOURS */
     --color-primary-blue: #264688;
     --color-primary-green: #2ca69e;
-    --color-primary-yellow: #ffc72c;
+    --color-primary-yellow: #E0AB1B;
 
     --color-hover-blue: #1b3360;
     --color-hover-green: #248781 ;
-    /* --color-hover-yellow: ; */
+    --color-hover-yellow: #BC8F12;
+    
 
 
     --color-error-bg: #F8D7DA;
@@ -40,8 +42,20 @@
 	/* ease top */
 	--animate-ease: fadeIn 0.5s ease;
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(0) }
         from { opacity: 0; transform: translateY(1rem) }
+    }
+
+
+    --animate-slideIn: slideIn 0.4s ease forwards;
+    @keyframes slideIn {
+        from {transform: translateX(100%);}
+        to {transform: translateX(0);}
+    }
+
+    --animate-slideOut: slideOut 0.3s ease forwards !important;
+    @keyframes slideOut {
+        from { transform: translateX(0); }
+        to   { transform: translateX(100%); }
     }
 	
 

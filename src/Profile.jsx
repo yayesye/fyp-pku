@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { supabase } from "./non-page-components/supabaseDB"
+import { fetchCurrentUser, supabase } from "./non-page-components/supabaseDB"
 import Loading from "./non-page-components/Loading"
 
 export default function Profile () {
@@ -23,11 +23,13 @@ export default function Profile () {
 
         setloading(true)
 
-        async function fetchProfileUser() {
-            const {data , error} = await supabase.from('Users').select('*').eq('userID', param.userid).single()
-            setProfile(data)
-            setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${data.userName[0]}`)
-        } param && fetchProfileUser()
+        // async function fetchProfileUser() {
+        //     const {data , error} = await supabase.from('Users').select('*').eq('userID', param.userid).single()
+        //     setProfile(data)
+        //     setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${data.userName[0]}`)
+        // } param && fetchProfileUser()
+
+        param && fetchCurrentUser(setProfile)
 
         async function fetchProfilePosts() {
             const {data, error} = await supabase.from('BulletinPosts').select('postID, title, status, FileAttachment(fileURL)').eq('userID',param.userid)
@@ -36,7 +38,7 @@ export default function Profile () {
 
         setTimeout(() => {
             setloading(false)
-        }, 600);
+        }, 200);
 
     },[])
 
@@ -57,7 +59,7 @@ export default function Profile () {
 
 
             <div className="flex flex-col items-center text-center pt-10 pb-10">
-                <img src={pfp} className="rounded-full max-w-20" />
+                <img src={profile?.pfp} className="rounded-full max-w-20" />
                 <h1 className="font-bold text-2xl"> {profile?.userName} </h1>
                 <h2 className=" text-xl"> {profile?.userRole} </h2>
             </div>
@@ -77,7 +79,7 @@ export default function Profile () {
 
                         <h1 
                         onClick={() => navigate(`/posts/${p.postID}`)}
-                        className="font-bold text-primary-blue text-2xl hover:underline text-balance ">{p.title}</h1>
+                        className="font-bold text-primary-blue text-2xl hover:underline text-balance truncate ">{p.title}</h1>
                         <p className="text-sm text-gray-500 mt-10">{p.Users?.userName}</p>
 
 

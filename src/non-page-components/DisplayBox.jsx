@@ -32,7 +32,7 @@ export function ErrorBox ({onDismiss, message}) {
 
 
 export function GoodBox ({onDismiss, message}) {
-    return(
+    return createPortal(
         // this the background blur
         <div className=" bg-black/50 backdrop-blur-sm inset-0 fixed flex items-center justify-center h-screen w-screen">
 
@@ -53,10 +53,34 @@ export function GoodBox ({onDismiss, message}) {
                 
             </div>
         </div>
+        , document.body
     )
 }
 
 
+export function NeutralBox ({onDismiss, message}) {
+    return createPortal(
+        // this the background blur
+        <div className=" bg-black/50 backdrop-blur-sm inset-0 fixed flex items-center justify-center h-screen w-screen">
+
+            {/* this the small box */}
+            <div className=" min-w-[40vw] bg-white rounded-xl animate-pop flex flex-col shadow-2xl ">
+                
+                <div className="p-5 h-full  flex flex-col">
+                    <div>
+                        <i className="fas text-lg fa-exclamation-triangle"></i>
+                        <h1 className="inline-block pl-3 text-black font-bold ">{message || 'NULL' }</h1>
+                    </div>
+                        <div onClick={onDismiss} className="flex ml-auto mt-4 p-2 min-w-22 max-w-35 justify-center rounded-xl bg-gray-500 text-white text-center cursor-pointer">
+                        <h1>Continue</h1>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        , document.body
+    )
+}
 
 
 export function NotFound () {

@@ -12,6 +12,7 @@ import CreatePosts from './CreatePosts.jsx';
 import Profile from './Profile.jsx';
 import Loading from './non-page-components/Loading.jsx';
 import EditPosts from './EditPosts.jsx';
+import MakeAnnouncement from './MakeAnnouncement.jsx';
 
 
 // import Comment from './Comment.jsx'
@@ -31,12 +32,17 @@ export default function App() {
           <Route index element={<Auth />} />
           <Route path="dashboard" element={ <Protected>  <Dashboard />  </Protected> } />
           <Route path="posts/:postid" element={ <Protected>  <Posts />  </Protected>  } />
+
           <Route path="create" element={ <Protected>  <CreatePosts />  </Protected>  } />
-          <Route path='profile/:userid' element={ <Protected>  <Profile />  </Protected> } />
-
-          <Route path="load" element={<Loading />} />
-
           <Route path="edit/:postid" element={ <Protected>  <EditPosts />  </Protected>  } />
+          <Route path='profile/:userid' element={ <Protected>  <Profile />  </Protected> } />
+          <Route path="announcement" element={ <Protected>  <MakeAnnouncement />  </Protected>  } />
+
+          {/* <Route path="load" element={<Loading />} /> */}
+
+
+
+          
 
           {/* the comment is still in development */}
           
