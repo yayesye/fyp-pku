@@ -117,7 +117,7 @@ export default function Dashboard () {
                 FileAttachment(fileURL),
                 Users(userName),
                 Category(categoryName)
-                `)
+                `).order('created_at', {ascending: false})
 
             // console.log('Fetched posts: '+JSON.stringify(data, null ,2))
             // console.log(data)

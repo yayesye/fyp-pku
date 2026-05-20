@@ -21,7 +21,7 @@ export default function NotifBar({open, func}) {
 
 
                 {/* this is the content */}
-                <div className="p-5 mt-[-2px] inset-ring-2 inset-ring-gray-300 flex ">
+                <div className="p-5 -mt-0.5 inset-ring-2 inset-ring-gray-300 flex ">
                     <div>
                         <h1 className="font-bold underline">Title</h1>
                         <p>Content</p>
@@ -30,7 +30,7 @@ export default function NotifBar({open, func}) {
                         <i className="fas fa-check cursor-pointer" title="Mark As Read"></i>
                     </div>
                 </div>
-                <div className="p-5 mt-[-2px] inset-ring-2 inset-ring-gray-300 flex ">
+                <div className="p-5 -mt-0.5 inset-ring-2 inset-ring-gray-300 flex ">
                     <div>
                         <h1 className="font-bold underline">Title</h1>
                         <p>Content</p>

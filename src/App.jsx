@@ -14,7 +14,6 @@ import Loading from './non-page-components/Loading.jsx';
 import EditPosts from './EditPosts.jsx';
 import MakeAnnouncement from './MakeAnnouncement.jsx';
 
-
 // import Comment from './Comment.jsx'
 // import * as supabaseDB from './supabaseDB.jsx'
 
@@ -37,6 +36,11 @@ export default function App() {
           <Route path="edit/:postid" element={ <Protected>  <EditPosts />  </Protected>  } />
           <Route path='profile/:userid' element={ <Protected>  <Profile />  </Protected> } />
           <Route path="announcement" element={ <Protected>  <MakeAnnouncement />  </Protected>  } />
+
+          <Route path='good' element={<GoodBox />} />
+          <Route path='error' element={<ErrorBox />} />
+
+
 
           {/* <Route path="load" element={<Loading />} /> */}
 

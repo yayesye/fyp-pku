@@ -38,7 +38,7 @@ export async function fetchCurrentUser(func) {
     
     if (ColumnError) console.log('Error fetching from Users: ',ColumnError)
 
-    userData.pfp = `https://ui-avatars.com/api/?background=264688&color=fff&name=${userData?.userName[0]}`
+    if (userData) userData.pfp = `https://ui-avatars.com/api/?background=264688&color=fff&name=${userData?.userName[0]}`
 
     func(userData)
 }
