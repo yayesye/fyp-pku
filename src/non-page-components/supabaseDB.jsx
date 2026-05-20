@@ -19,19 +19,16 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
 })
 
 
-const subscription = supabase.channel('public-posts')
-  .on(
-    'postgres_changes',
-    { 
-      event: 'INSERT', 
-      schema: 'public', 
-      table: 'BulletinPosts' 
-    },
-    (payload) => {
-      console.log('New post received!', payload.new)
-      // Update your local state here with payload.new
-    }
-  ).subscribe()
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient('https://<project-ref>.supabase.co', '<anon-or-publishable-key>')
+
+const channel = supabase
+  .channel('bulletin_posts:global', { config: { private: true } })
+  .on('broadcast', { event: 'INSERT' }, (payload) => console.log('insert', payload))
+//   .on('broadcast', { event: 'UPDATE' }, (payload) => console.log('update', payload))
+  .on('broadcast', { event: 'DELETE' }, (payload) => console.log('delete', payload))
+  .subscribe()
 
 
 
