@@ -77,37 +77,19 @@ export default function Dashboard () {
         // CHANGE TITLE NAME 
         document.title = "Dashboard"
 
-        // THIS IS THE OLD FETCH USER, NOW I USE FETCH USER FROM SUPABASE COMPONENT INSTEAD
-        // async function fetchUser() {
-            
-        //     const {data: {user}} = await supabase.auth.getUser()
-        //     const userid = user.id
-        //     setuserid(userid)
+        const channel = supabase
+            .channel('posts-channel')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'Posts' },
+                (payload) => {
+                    console.log('Change:', payload)
+                    fetchPosts() // re-fetch on any change
+                }
+            )
+            .subscribe()
 
-
-        //     const { data, error } = await supabase.from('Users').select('userName, userRole').eq('userID', userid).single()
-
-        //     if (error) {
-        //         console.error('Error fetching:', error)
-        //         return
-        //     }
-
-        //     // console.log('Current user id: '+userid)
-        //     // console.log('Current user name: '+data.userName)
-        //     // console.log('Current user role: '+data.userRole)
-        //     // console.log(data)
-
-        //     if (!data.userName){
-        //         setUser({userName: 'Anonymous', userRole: 'Anonymous'})
-        //         setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=A`)
-        //     }
-
-        //     // console.log(data.userName)
-
-        //     setUser(data)
-        //     setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${data.userName[0]}`)
-
-        // }
+        return () => supabase.removeChannel(channel) // cleanup on unmount        
 
 
         async function fetchAllPosts() {
