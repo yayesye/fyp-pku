@@ -18,7 +18,7 @@ function Comments({ comment, onReply, onDelete, currentUserid }) {
         <div className="p-5 pt-0 bg-gray-100">
             <div className="flex items-start h-full">
                 <div className="flex">
-                    {/* <img src='' className="rounded-full aspect-square max-h-8" /> */}
+                    {/* <img src={} className="rounded-full aspect-square max-h-8" /> */}
                     <h1 className="font-bold content-center ml-2 border-b-2">{comment.Users.userName}</h1>
                 </div>
                 

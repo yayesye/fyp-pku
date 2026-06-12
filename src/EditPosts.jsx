@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
-import { Link, useParams } from "react-router-dom";
-import { supabase } from "./non-page-components/supabaseDB"
+import { data, Link, useParams } from "react-router-dom";
+import { fetchAllPosts, supabase } from "./non-page-components/supabaseDB"
 import ImgBBUploadButton from "./non-page-components/ImgBBUploadButton"
 import CategoryDropdown from "./non-page-components/CategoryDropdown";
 import { GoodBox } from "./non-page-components/DisplayBox";
@@ -18,15 +18,14 @@ export default function EditPosts() {
     const param = useParams()
     
 
-    const [postForm, setPostForm] = useState({
-        categoryID: 1,
-        title: '',
-        description: '',
-        publishDate: date,
-        publishTime: time,
-        status: 'ACTIVE'
-    })      
+    // const [postForm, setPostForm] = useState({
+    //     categoryID: 1,
+    //     title: '',
+    //     description: '',
+    //     status: 'ACTIVE'
+    // })      
 
+    const [postForm, setPostForm] = useState({})
 
 
     const handleChange = (e) => {
@@ -41,13 +40,26 @@ export default function EditPosts() {
 
     useEffect(()=>{
         async function fetchPosts() {
-            const {data, error} = await supabase.from('BulletinPosts').select('*').eq('postID',param.postid).single()
 
-            if (error) console.log('Error: ',error)
+            // old individual fetch from supabase
+            // const {data, error} = await supabase.from('BulletinPosts').select('*').eq('postID',param.postid).single()
 
+            const fetchPost = await fetchAllPosts()
+            const data = fetchPost.find(p => p.postID === Number(param.postid))
+
+            // if (error) console.log('Error: ',error)
+
+            // setPostForm({
+            //     categoryID: 1,
+            //     title: data.title,
+            //     description: data.description,
+            //     status: 'ACTIVE'                
+            // })
+
+            setPostForm(data)
                 
-            console.log(data)
         }
+        fetchPosts()
     },[])
 
 
@@ -107,8 +119,9 @@ export default function EditPosts() {
             <form >
             <div className="bg-white shadow w-screen md:w-2/3 h-full justify-self-center flex p-8 flex-col justify-start gap-4 ">
 
-            {console.log(param.postid)}
-                
+                <div>
+                    <img src={postForm?.FileAttachment?.fileURL} className="max-h-[30vw]" />
+                </div>
 
                 
                 <div className="bg-primary-green rounded-lg w-fit">
@@ -116,22 +129,23 @@ export default function EditPosts() {
                 </div>
 
                 <label htmlFor="userName">
-                    <h2 className=" font-bold text-primary-green pb-2" >Title</h2>
+                    <h2 className=" font-bold text-primary-green pb-2" >Updated Title</h2>
                     <input 
                     onChange={handleChange}
                     value={postForm.title}
-                    type="text" name="title" className=" outline-2 outline-gray-300 p-3 rounded-md placeholder:text-gray-400 w-full  " placeholder="Title Name...."/>
+                    type="text" name="title" className=" italic font-semibold outline-2 outline-gray-300 p-3 rounded-md placeholder:text-gray-400 w-full " placeholder="Title Name...."/>
                 </label>
 
                 <label htmlFor="postDesc">
-                    <h2 className=" font-bold text-primary-green pb-2" >Description</h2>
+                    <h2 className=" font-bold text-primary-green pb-2" >Updated Description</h2>
                     <textarea 
                     onChange={handleChange}
                     value={postForm.description}
-                    name="description" className=" resize-none border-2 border-gray-300 w-full p-3 h-50" placeholder="Insert Description Here......"></textarea>
+                    name="description" className=" italic font-semibold resize-none border-2 border-gray-300 w-full p-3 h-50" placeholder="Insert Description Here......"></textarea>
                 </label>
 
-                <div className="text-primary-green">
+                <div className="text-primary-green italic font-semibold">
+                    <h2 className="font-bold text-inherit pb-2 not-italic">Updated Category</h2>
                     <CategoryDropdown value={postForm.categoryID} onChange={handleChange} />
                 </div>
                 
@@ -140,7 +154,7 @@ export default function EditPosts() {
                 {/* this is the submit button */}
                 <button
                 onClick={handleSubmitAll}
-                className=" text-white bg-hover-green hover:bg-primary-green cursor-pointer rounded-xl h-12 mt-8 min-w-50 self-end-safe ">Create</button>
+                className=" text-white bg-hover-green hover:bg-primary-green cursor-pointer rounded-xl h-12 mt-8 min-w-50 self-end-safe ">Finish Edit</button>
 
             </div>
             </form>

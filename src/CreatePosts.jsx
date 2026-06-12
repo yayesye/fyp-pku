@@ -130,6 +130,7 @@ export default function CreatePosts() {
                 </label>
 
                 <div className="text-primary-blue">
+                    <h2 className="font-bold text-inherit pb-2">Category</h2>
                     <CategoryDropdown value={postForm.categoryID} onChange={handleChange} />
                 </div>
                 

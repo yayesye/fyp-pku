@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { fetchCurrentUser, supabase } from "./non-page-components/supabaseDB"
+import { fetchAllPosts, fetchCurrentUser, supabase } from "./non-page-components/supabaseDB"
 import { Link, useNavigate, useParams } from "react-router-dom"
 
 import CommentSection from "./CommentSection"
@@ -15,7 +15,7 @@ export default function Posts () {
     const [attachment , setAttachment] = useState()
     const [pfp, setpfp] = useState()
     const [commentContent, setCommentContent] = useState()
-    const [userid, setuserid] = useState()
+    const [commentUserid, setcommentUserid] = useState()
     const [timestamptz, setTime] = useState()
 
     const [loading,setloading] = useState(false)
@@ -27,7 +27,7 @@ export default function Posts () {
 
     const commentFormat = {
         postID: posts?.postID,
-        userID: userid?.userID,
+        userID: commentUserid?.userID,
         parentComment: null,
         content: commentContent,
         postedTime: new Date().toISOString() ,
@@ -49,7 +49,7 @@ export default function Posts () {
         else {
             console.log('Comment inserted!!')
             setCommentContent('')
-            setrefresh(e => e+1 )
+            setrefresh(e => e + 1 )
         }
         
     }
@@ -60,39 +60,81 @@ export default function Posts () {
         // CHANGE TITLE NAME
         document.title = "Posts"
 
-        // async function fetchUser() {
-        //     const { data: {session}, error } = await supabase.auth.getSession()
-        //     session ? setuserid(session.user.id) : console.log('Error fetching user: ',error)
 
-        //     // console.log(session.user.id)
-        // }fetchUser()
+        function changeDate(data) {
+            const parts = data.split('-')
+            const year = parts[0]
+            const monthIndex = parseInt(parts[1], 10) - 1
+            const day = parts[2]
 
+            const months = [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+            ]
 
-        fetchCurrentUser(setuserid)
+            return `${day} ${months[monthIndex]} ${year}`
+        }
+
         
 
+        // async function test() {
+        //     const post = (await fetchAllPosts()).find(p => p.postID === 49);
+        //     console.log(post)
+
+        // }test()
+        
+
+
         async function fetchPosts() {
-            // console.log(postid)
-            const { data, error } = await supabase.from('BulletinPosts')
-            .select(`
-                *,
-                FileAttachment(fileURL),
-                Users(userName),
-                Category(categoryName)
-                `)
-            .eq('postID', param.postid)
-            .single()
+            // THIS IS THE OLD FETCH, NOW WE JUST FILTER DATA FROM THE FETCHED POST AT SUPABASE DB COMPONENT
+            // const { data, error } = await supabase.from('BulletinPosts')
+            // .select(`
+            //     *,
+            //     FileAttachment(fileURL),
+            //     Users(userName),
+            //     Category(categoryName)
+            //     `)
+            // .eq('postID', param.postid)
+            // .single()
 
 
-            if (error) {
-                console.error('Error fetching:', error)
-                return
-            }
+            // if (error) {
+            //     console.error('Error fetching:', error)
+            //     return
+            // }
 
+            const fetchPost = await fetchAllPosts()
+            const data = fetchPost.find(p => p.postID === Number(param.postid) )
+            
 
+            data.publishDate = new Date(data.publishDate).toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            });
+
+            data.publishTime = (() => {
+            const [h, m] = data.publishTime.split(':');
+            const d = new Date();
+            d.setHours(h, m);
+            return d.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+            });
+            })();         
+            
+            
             setPosts(data)
             setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${data.Users.userName[0]}`)
-        }fetchPosts()
+        }
+
+
+        async function fetchAll(){
+            setcommentUserid(await fetchCurrentUser())
+            fetchPosts()
+            
+        }fetchAll()
 
 
     }, [])    
@@ -116,9 +158,9 @@ export default function Posts () {
             {/* this is the middle block */}
             <div className=" lg:m-20 lg:mt-0 bg-white shadow-[0_0_35px_rgba(0,0,0,0.25)] ">
                 {/* this is the banner */}
-                <div className=" object-cover">
+                <div className=" justify-center flex">
                     {posts?.FileAttachment?.fileURL? 
-                        <img src={posts.FileAttachment.fileURL} className="inset-ring-2 " /> : <p>NO IMAGE</p>
+                        <img src={posts.FileAttachment.fileURL} className="max-h-[50vw]" /> : <p>NO IMAGE</p>
                     }
                 </div>
                 
@@ -131,9 +173,10 @@ export default function Posts () {
 
                 <div className='p-2 flex content-center gap-3 bg-gray-200 '>
                     <h3 className=" content-center">Made by: </h3>
-                    <img src={pfp} className='rounded-full aspect-square h-8' alt="this the user pfp" /> 
+                    <img src={pfp && pfp} className='rounded-full aspect-square h-8' alt="this the user pfp" /> 
                     <h1 className="text-md font-bold text-primary-blue content-center">{posts?.Users.userName}</h1> 
-                </div>                  
+                    <h1 className="ml-auto content-center">Published on:<strong className="ml-2">{posts?.publishDate}, {posts?.publishTime} </strong> </h1>
+                </div>         
 
 
                 {/* this is the content or paragraph */}
@@ -151,7 +194,7 @@ export default function Posts () {
 
                 <div className="w-full bg-primary-green flex justify-center p-5 gap-4">
                 {/* our pfp */}
-                <img src={userid?.pfp} alt="pfp" className=" aspect-square h-12 rounded-full"  />
+                <img src={commentUserid?.pfp} alt="pfp" className=" aspect-square h-12 rounded-full"  />
                 <textarea 
                 value={commentContent || ''}
                 onChange={(e)=>{ setCommentContent(e.target.value) }}

@@ -85,7 +85,7 @@ export default function Auth() {
     const [test, settest] = useState()
 
     useEffect(()=>{
-        fetchCurrentUser(settest)
+        // fetchCurrentUser(settest)
     },[])
     
     
@@ -107,19 +107,15 @@ export default function Auth() {
 
 
             {/* this is the middle block */}
-            <div className="bg-white shadow w-full md:w-2/3 lg:w-1/3 h-full md:h-4/5 mt-8 justify-self-center rounded-xl">
+            <div className="bg-white shadow w-full md:w-2/3 lg:w-1/3 h-full md:h-4/5 mt-8 justify-self-center md:rounded-xl">
 
 
                 {/* login n register button */}
-                <div className="w-full  text-gray-400 rounded-t-xl bg-hover-blue font-bold box-border">
-
-                    {/* old login register button */}
-                    {/* <button autoFocus onClick={()=>setMode('login')}    className=" cursor-pointer w-1/2 p-5 focus:outline-none focus:inset-shadow-[0_-3px_0_0_#ffc72c] focus:text-white hover:bg-hover-blue rounded-tl-xl focus:bg-hover-blue  ">Login</button>
-                    <button onClick={()=>setMode('register')}           className=" cursor-pointer w-1/2 p-5 focus:outline-none focus:inset-shadow-[0_-3px_0_0_#ffc72c] focus:text-white hover:bg-hover-blue rounded-tr-xl focus:bg-hover-blue ">Register</button> */}
+                <div className="w-full  text-gray-400 md:rounded-t-xl bg-hover-blue font-bold box-border">
 
                     {/* new login and register button */}
                     <div className="flex w-full">
-                        <label className={`cursor-pointer w-1/2 p-5 text-center rounded-tl-xl transition-colors
+                        <label className={`cursor-pointer w-1/2 p-5 text-center md:rounded-tl-xl transition-colors
                             ${mode === 'login' 
                             ? 'inset-shadow-[0_-3px_0_0_#ffc72c] text-white bg-primary-blue' 
                             : 'hover:bg-hover-blue'}`}>
@@ -133,7 +129,7 @@ export default function Auth() {
                             />
                             Login
                         </label>
-                        <label className={`cursor-pointer w-1/2 p-5 text-center rounded-tr-xl transition-colors
+                        <label className={`cursor-pointer w-1/2 p-5 text-center md:rounded-tr-xl transition-colors
                             ${mode === 'register' 
                             ? 'inset-shadow-[0_-3px_0_0_#ffc72c] text-white bg-primary-blue' 
                             : 'hover:bg-hover-blue'}`}>
@@ -181,7 +177,7 @@ export default function Auth() {
                             </label> */}
 
 
-                            <button className=" self-start text-[#00A79D] text-[14px] ml-0 md:ml-auto cursor-pointer line-through ">Forgot Password?</button>
+                            <button className=" self-start text-[#00A79D] text-[14px] ml-0 md:ml-auto cursor-pointer ">Forgot Password?</button>
                         </div>
 
                         {/* {errorMsg && <ErrorBox message={errorMsg} onDismiss={()=>{setErrorMsg(null)}} />} */}

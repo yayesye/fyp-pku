@@ -20,13 +20,6 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
 
 
 
-
-export async function fetchAllPosts () {
-    
-}
-
-
-
 export async function fetchCurrentUser(func) {
 
     let UserID = null
@@ -41,9 +34,23 @@ export async function fetchCurrentUser(func) {
 
     if (userData) userData.pfp = `https://ui-avatars.com/api/?background=264688&color=fff&name=${userData?.userName[0]}`
 
-    func(userData)
+    return userData
 }
 
+export async function fetchAllPosts() {
+    const { data, error } = await supabase.from('BulletinPosts')
+        .select(`
+            *,
+            FileAttachment(fileURL),
+            Users(userID, userName),
+            Category(categoryName)
+            `)
+        .order('created_at', {ascending: false})
+
+    if (error) console.log('Error: ',error)
+
+    return data
+}
 
 
 

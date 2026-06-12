@@ -24,7 +24,7 @@ export default function CategoryDropdown({ value, onChange }) {
 
     return (
         <label htmlFor="categoryID">
-            <h2 className="font-bold text-inherit pb-2">Category</h2>
+            {/* <h2 className="font-bold text-inherit pb-2">Category</h2> */}
             <select
                 id="categoryID"
                 name="categoryID"

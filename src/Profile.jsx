@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { data, useNavigate, useParams } from "react-router-dom"
 import { fetchAllPosts, fetchCurrentUser, supabase } from "./non-page-components/supabaseDB"
 import Loading from "./non-page-components/Loading"
 import { ErrorBox, GoodBox, NeutralBox } from "./non-page-components/DisplayBox"
@@ -12,7 +12,7 @@ export default function Profile () {
 
     const param = useParams()
 
-    const [profile, setProfile] = useState()
+    const [userProfile, setProfile] = useState()
     const [pfp,setpfp] = useState()
     const [ProfilePosts, setProfilePosts] = useState()
 
@@ -27,15 +27,20 @@ export default function Profile () {
     // console.log(param.userid)
 
     async function fetchProfilePosts() {
-        const {data, error} = await supabase.from('BulletinPosts').select('postID, title, status, FileAttachment(fileURL)').eq('userID',param.userid)
+
+        setProfile(await fetchCurrentUser())
+
+        // this is the old fetch from supabase, now we just use the fetch all post from supabase component and filter
+        // const {data, error} = await supabase.from('BulletinPosts').select('postID, title, status, FileAttachment(fileURL)').eq('userID',param.userid)
+
+        const fetchPosts = await fetchAllPosts()
+        const data = fetchPosts?.filter(p => p.userID === param.userid)
         setProfilePosts(data)
     }
 
     useEffect(()=>{
 
         setloading(true)
-
-        param && fetchCurrentUser(setProfile)
 
         fetchProfilePosts()
 
@@ -71,16 +76,16 @@ export default function Profile () {
 
 
             <div className="flex flex-col items-center text-center pt-10 pb-10">
-                <img src={profile?.pfp} className="rounded-full max-w-20" />
-                <h1 className="font-bold text-2xl"> {profile?.userName} </h1>
-                <h2 className=" text-xl"> {profile?.userRole} </h2>
+                <img src={userProfile?.pfp} className="rounded-full max-w-20" />
+                <h1 className="font-bold text-2xl"> {userProfile?.userName} </h1>
+                <h2 className=" text-xl"> {userProfile?.userRole} </h2>
             </div>
 
-            {console.log(ProfilePosts)}
+            {/* {console.log(ProfilePosts)} */}
             <div className="p-5 flex gap-5 flex-wrap">
                 {
                 ProfilePosts?.map(p => (
-                    <div key={p.postID} className="bg-white flex flex-col rounded-xl p-8 w-full md:w-85 shadow cursor-pointer hover:shadow-md">
+                    <div key={p.postID} className="bg-white flex flex-col rounded-xl p-8 w-full md:max-w-[45vw] lg:max-w-[30vw] shadow cursor-pointer hover:shadow-md">
 
                         <div>
                             {p.FileAttachment?.fileURL 
@@ -91,12 +96,12 @@ export default function Profile () {
 
                         <h1 
                         onClick={() => navigate(`/posts/${p.postID}`)}
-                        className="font-bold text-primary-blue text-2xl hover:underline text-balance truncate ">{p.title}</h1>
-                        <p className="text-sm text-gray-500 mt-10">{p.Users?.userName}</p>
+                        className="font-bold text-primary-blue text-2xl hover:underline text-balance truncate mb-6 ">{p.title}</h1>
+                        {/* <p className="text-sm text-gray-500 mt-10">{p.Users?.userName}</p> */}
 
 
                         { //PUT IF THE CURRENT USER IS THE SAME AS THE PROFILE USER HERE, THEN SHOW THIS
-
+                        param.userid === userProfile.userID &&
                         <div className="flex justify-center mt-auto items-end gap-10">
                             <button value="Edit"
                             onClick={()=>navigate(`/edit/${p.postID}`)}

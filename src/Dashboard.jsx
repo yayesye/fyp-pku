@@ -9,6 +9,7 @@ import NotifPanel from './non-page-components/NotifPanel';
 import Posts from './Posts';
 import Loading from './non-page-components/Loading';
 import { createPortal } from 'react-dom';
+import Admin from './Admin';
 
 
 
@@ -27,7 +28,7 @@ export default function Dashboard () {
     const [pfp, setpfp] = useState()
     const [post, setpost] = useState([])
 
-    const [userid,setuserid] = useState()
+    // const [userid,setuserid] = useState()
     const [Role, setRole] = useState(false)
 
     const [loading, setloading] = useState(true)
@@ -68,9 +69,6 @@ export default function Dashboard () {
 
     
     useEffect(() => {
-
-
-        fetchCurrentUser(setUser)
 
         setloading(true)
 
@@ -130,10 +128,11 @@ export default function Dashboard () {
 
         }
 
-        function fetchAll() {
+        async function fetchAll() {
 
             // fetch current user is from supabase component
-            fetchCurrentUser(setUser)
+            // setUser(await fetchCurrentUser())
+            setUser(await fetchCurrentUser())
             // fetchUser()
             fetchAllPosts()
             setTimeout(()=>{setloading(false)},200)
@@ -144,6 +143,7 @@ export default function Dashboard () {
 
     
 
+    
 
     if (loading) return <Loading />
 
@@ -177,7 +177,7 @@ export default function Dashboard () {
                         <img src={user?.pfp} className='rounded-full aspect-square h-11' alt="this the user pfp" /> 
                     </div>
                     <div className='hidden md:block md:mr-5'>
-                        <h1 className="text-lg text-center font-bold text-primary-blue"> {user?.userName} </h1>
+                        <h1 className="text-lg text-center font-bold text-primary-blue"> {user?.userName} </h1> 
                         <div className='bg-primary-blue rounded-md pl-2 pr-2 p-1'><h2 className=" text-center text-primary-yellow font-bold text-xs"> {user?.userRole} </h2></div>
                     </div>
 
@@ -211,8 +211,9 @@ export default function Dashboard () {
                 </div>
             </div>
             }
-            
 
+
+            {user?.userRole === 'ADMIN' && <Admin /> }
 
 
             {/* this is the start of the bulletin posts */}
