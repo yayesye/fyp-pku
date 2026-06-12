@@ -9,7 +9,8 @@ import NotifPanel from './non-page-components/NotifPanel';
 import Posts from './Posts';
 import Loading from './non-page-components/Loading';
 import { createPortal } from 'react-dom';
-import Admin from './Admin';
+import Admin from './non-page-components/Admin';
+import EditBar from './non-page-components/EditBar';
 
 
 
@@ -192,28 +193,8 @@ export default function Dashboard () {
 
 
 
-            {/* this is for staff's only */}
-            
-            {user.userRole === 'STAFF' && 
-            <div className='flex flex-col md:flex-row'>
-                <div className=' md:w-1/2 h-20 bg-primary-blue hover:bg-hover-blue m-5 rounded-xl cursor-pointer flex items-center justify-center gap-3' onClick={() => navigate('/create')}>
-                    <i className='fas fa-plus fa-xl pt-1 invert'></i>
-                    <h2 className='text-white text-center font-bold text-xl '>Create New Posts</h2>
-                </div>
-                {/* {console.log(userid)} */}
-                <div className=' md:w-1/2 m-5 mt-0 md:mt-5 h-20 bg-primary-green hover:bg-hover-green rounded-xl cursor-pointer flex items-center justify-center gap-3' onClick={() => navigate(`/profile/${user.userID}`)}>
-                    <i className='fas fa-edit fa-xl invert'></i>
-                    <h2 className='text-white text-center font-bold text-xl '>Edit Posts</h2>                    
-                </div>
-                <div className=' md:w-1/2 m-5 mt-0 md:mt-5 h-20 bg-primary-yellow hover:bg-hover-yellow rounded-xl cursor-pointer flex items-center justify-center gap-3' onClick={() => navigate(`/announcement`)}>
-                    <i className='fas fa-bell fa-xl invert'></i>
-                    <h2 className='text-white text-center font-bold text-xl '>Announcement</h2>                    
-                </div>
-            </div>
-            }
-
-
-            {user?.userRole === 'ADMIN' && <Admin /> }
+            {/* this is the top create bar based on user role */}
+            <EditBar role={user.userRole} />
 
 
             {/* this is the start of the bulletin posts */}
