@@ -103,13 +103,14 @@ export default function NotifBar({open, func}) {
             } else {
                 await enablePushNotifications()
                 setPushEnabled(true)
-                // setPushMessage("Push notifications are on.")
+                setPushMessage("Turning Notifications On")
             }
         } catch (error) {
             console.error("Push notification toggle failed:", error)
             setPushMessage(error.message || "Could not update push notifications.")
         } finally {
             setPushLoading(false)
+            setPushMessage("")
         }
     }
 
