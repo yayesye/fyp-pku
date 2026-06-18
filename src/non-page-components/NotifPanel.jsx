@@ -11,6 +11,7 @@ export default function NotifBar({open, func}) {
     const [pushEnabled, setPushEnabled] = useState(false)
     const [pushLoading, setPushLoading] = useState(false)
     const [pushMessage, setPushMessage] = useState("")
+    const [showPanel, setShowPanel] = useState(open)
 
     useEffect(()=>{
         async function checkPushStatus() {
@@ -26,6 +27,19 @@ export default function NotifBar({open, func}) {
             console.error("Push notification status check failed:", error)
         })
     },[])
+
+    useEffect(() => {
+        if (open) {
+            setShowPanel(true)
+            return
+        }
+
+        const timer = setTimeout(() => {
+            setShowPanel(false)
+        }, 300)
+
+        return () => clearTimeout(timer)
+    }, [open])
 
     useEffect(() => {
         if (!open) return
@@ -85,11 +99,11 @@ export default function NotifBar({open, func}) {
             if (pushEnabled) {
                 await disablePushNotifications()
                 setPushEnabled(false)
-                setPushMessage("Push notifications are off.")
+                // setPushMessage("Push notifications are off.")
             } else {
                 await enablePushNotifications()
                 setPushEnabled(true)
-                setPushMessage("Push notifications are on.")
+                // setPushMessage("Push notifications are on.")
             }
         } catch (error) {
             console.error("Push notification toggle failed:", error)
@@ -99,27 +113,16 @@ export default function NotifBar({open, func}) {
         }
     }
 
+    if (!showPanel) return null
+
     return createPortal (
-        <div className={`bg-black/50  backdrop-blur-sm inset-0 fixed items-center justify-center h-screen w-screen ${open? 'pointer-events-auto':'pointer-events-none opacity-0'} `}>
+        <div className={`bg-black/50  backdrop-blur-sm inset-0 fixed items-center justify-center h-screen w-screen ${open? 'pointer-events-auto':'pointer-events-none'} `}>
 
             
             {/* this is the notif panel */}
-            <div key={open? 'open' : 'close'} className= 'absolute h-full sm:w-100 w-full bg-gray-200 ml-auto inset-0 animate-right pr-4 animate-slideIn'>
+            <div className= {`absolute h-full sm:w-100 w-full bg-gray-200 ml-auto inset-0 animate-right pr-4 ${open ? 'animate-slideIn' : 'animate-slideOut'}`}>
 
-                <div className="mt-5 flex justify-center">
-                    <span className="font-bold">Push Notification</span>
-                    
-                </div>
-
-                {/* this is the top X button */}
-                <div className='w-full flex p-5'>
-                    {/* <i className=' ml-auto fas fa-x text-primary-green text-2xl cursor-pointer'></i> */}
-                    <i className=' ml-auto fas fa-x text-primary-green text-xl cursor-pointer'
-                    // onClick={()=>{setNotifBar(false)}}></i>
-                    onClick={func}></i>
-                </div>
-
-                <div className="mx-5 mb-5 rounded-md bg-white p-4 shadow-sm">
+                <div className="mx-5 mb-5 mt-5 rounded-md bg-white p-4 shadow-sm">
                     <div className="flex items-center justify-between gap-4">
                         <div>
                             <h2 className="font-bold text-primary-blue">Push Notification</h2>
@@ -134,11 +137,21 @@ export default function NotifBar({open, func}) {
                             aria-pressed={pushEnabled}
                             aria-label="Toggle push notifications"
                         >
-                            <span className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow transition-transform ${pushEnabled ? "translate-x-7" : "translate-x-1"}`}></span>
+                            <span className={`absolute left-0 top-1 h-6 w-6 rounded-full bg-white shadow transition-transform ${pushEnabled ? "translate-x-7" : "translate-x-1"}`}></span>
                         </button>
                     </div>
                     {pushMessage && <p className="mt-3 text-sm text-gray-600">{pushMessage}</p>}
                 </div>
+
+                {/* this is the top X button */}
+                <div className='w-full flex p-5'>
+                    {/* <i className=' ml-auto fas fa-x text-primary-green text-2xl cursor-pointer'></i> */}
+                    <i className=' ml-auto fas fa-x text-primary-green text-xl cursor-pointer'
+                    // onClick={()=>{setNotifBar(false)}}></i>
+                    onClick={func}></i>
+                </div>
+
+                
 
 
                 {/* this is the content */}
