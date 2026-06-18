@@ -87,13 +87,13 @@ export default function NotifBar({open, func}) {
         const { data: { user } } = await supabase.auth.getUser()
 
         if (user) {
-            await supabase.from("PushSubscriptions").delete().eq("userID", user.id)
+            await supabase.from("PushNotifSubscriptions").delete().eq("userID", user.id)
         }
     }
 
     async function handlePushToggle() {
         setPushLoading(true)
-        setPushMessage("")
+        setPushMessage("Turning Notifications On")
 
         try {
             if (pushEnabled) {
@@ -103,7 +103,7 @@ export default function NotifBar({open, func}) {
             } else {
                 await enablePushNotifications()
                 setPushEnabled(true)
-                setPushMessage("Turning Notifications On")
+                // setPushMessage("Turning Notifications On")
             }
         } catch (error) {
             console.error("Push notification toggle failed:", error)

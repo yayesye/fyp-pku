@@ -1,35 +1,35 @@
 import { useState, useEffect } from "react"
-import { data, Link, useParams } from "react-router-dom";
-import { fetchAllPosts, supabase } from "./non-page-components/supabaseDB"
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { supabase } from "./non-page-components/supabaseDB"
 import ImgBBUploadButton from "./non-page-components/ImgBBUploadButton"
 import CategoryDropdown from "./non-page-components/CategoryDropdown";
-import { GoodBox } from "./non-page-components/DisplayBox";
+import { ErrorBox, GoodBox } from "./non-page-components/DisplayBox";
+import Loading from "./non-page-components/Loading";
 
 export default function EditPosts() {
 
+    const navigate = useNavigate()
+    const param = useParams()
 
     const [imageData, setImageData] = useState({})
-    const date = new Date().toISOString().slice(0, 10);
-    const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
 
     const [Error, setError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
     const [Done, setDone] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
 
-    const param = useParams()
-    
-
-    // const [postForm, setPostForm] = useState({
-    //     categoryID: 1,
-    //     title: '',
-    //     description: '',
-    //     status: 'ACTIVE'
-    // })      
-
-    const [postForm, setPostForm] = useState({})
+    const [postForm, setPostForm] = useState({
+        categoryID: 1,
+        title: '',
+        description: '',
+        attachmentID: null,
+        FileAttachment: null,
+    })
 
 
     const handleChange = (e) => {
-        const { name, value, type, checked, files } = e.target; // 'name' not 'title'
+        const { name, value, type, checked, files } = e.target;
         setPostForm((prev) => ({
             ...prev,
             [name]  : type === 'checkbox' ? checked
@@ -40,50 +40,77 @@ export default function EditPosts() {
 
     useEffect(()=>{
         async function fetchPosts() {
+            setLoading(true)
+            setError(false)
 
-            // old individual fetch from supabase
-            // const {data, error} = await supabase.from('BulletinPosts').select('*').eq('postID',param.postid).single()
+            const { data, error } = await supabase
+                .from('BulletinPosts')
+                .select(`
+                    postID,
+                    categoryID,
+                    title,
+                    description,
+                    attachmentID,
+                    FileAttachment(fileURL)
+                `)
+                .eq('postID', param.postid)
+                .single()
 
-            const fetchPost = await fetchAllPosts()
-            const data = fetchPost.find(p => p.postID === Number(param.postid))
-
-            // if (error) console.log('Error: ',error)
-
-            // setPostForm({
-            //     categoryID: 1,
-            //     title: data.title,
-            //     description: data.description,
-            //     status: 'ACTIVE'                
-            // })
+            if (error) {
+                console.log('Error: ', error)
+                setError(true)
+                setErrorMessage('Could not load this post.')
+                setLoading(false)
+                return
+            }
 
             setPostForm(data)
-                
+            setLoading(false)
         }
+
+        document.title = 'Edit Posts'
         fetchPosts()
-    },[])
+    },[param.postid])
 
 
-    // removed the useEffect entirely, sbb only for fetch data
     async function insertAttachment ()  {
+        if (!imageData.url) return null
+
         const { data, error } = await supabase.from('FileAttachment')
             .insert({ filename: imageData.name, fileURL: imageData.url }).select().single()
 
-        setImageData(data)
+        if (error) throw error
+
+        return data
     }
 
     
 
-    async function insertPost (attachmentID)  {
+    async function updatePost (attachmentID)  {
 
-        const userid = (await supabase.auth.getUser()).data.user.id
-        console.log(userid)
+        const updatedPost = {
+            categoryID: postForm.categoryID,
+            title: postForm.title,
+            description: postForm.description,
+        }
 
-        console.log(attachmentID)
+        if (attachmentID) {
+            updatedPost.attachmentID = attachmentID
+        }
+
         const { data, error } = await supabase
             .from('BulletinPosts')
-            .insert({ ...postForm, userID: userid, attachmentID: attachmentID }) 
-            .select()
-
+            .update(updatedPost)
+            .eq('postID', param.postid)
+            .select(`
+                postID,
+                categoryID,
+                title,
+                description,
+                attachmentID,
+                FileAttachment(fileURL)
+            `)
+            .single()
 
         if (error) throw error
 
@@ -91,18 +118,28 @@ export default function EditPosts() {
     }
 
     async function handleSubmitAll() {
-        try {
-            // const { data: { user } } = await supabase.auth.getUser()
-            const attachment = await insertAttachment()
-            const post = await insertPost(attachment.attachmentID)
+        setSaving(true)
 
+        try {
+            const attachment = await insertAttachment()
+            const post = await updatePost(attachment?.attachmentID)
+
+            setPostForm(post)
+            setDone(true)
+            setError(false)
+            setErrorMessage("")
             console.log('Done!', { attachment, post })
-            return <GoodBox />
             
         } catch (error) {
-            
+            console.log('Error: ', error)
+            setError(true)
+            setErrorMessage('Post could not be updated.')
+        } finally {
+            setSaving(false)
         }
     }
+
+    if (loading || saving) return <Loading />
 
        
     return (
@@ -153,8 +190,11 @@ export default function EditPosts() {
 
                 {/* this is the submit button */}
                 <button
-                onClick={handleSubmitAll}
+                onClick={(e)=>{e.preventDefault(); handleSubmitAll();} }
                 className=" text-white bg-hover-green hover:bg-primary-green cursor-pointer rounded-xl h-12 mt-8 min-w-50 self-end-safe ">Finish Edit</button>
+
+                {Done && <GoodBox message='Post Updated!!' onDismiss={()=>navigate(-1)} /> }
+                {Error && <ErrorBox message={errorMessage} onDismiss={()=>setError(false)} /> }
 
             </div>
             </form>
