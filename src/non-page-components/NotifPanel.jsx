@@ -120,7 +120,7 @@ export default function NotifBar({open, func}) {
 
             
             {/* this is the notif panel */}
-            <div className= {`absolute h-full sm:w-100 w-full bg-gray-200 ml-auto inset-0 animate-right sm:gpr-4 ${open ? 'animate-slideIn' : 'animate-slideOut'}`}>
+            <div className= {`absolute h-full sm:w-100 w-full bg-gray-200 ml-auto inset-0 animate-right sm:pr-4 ${open ? 'animate-slideIn' : 'animate-slideOut'}`}>
 
                 <div className="mx-5 mb-5 mt-5 rounded-md bg-white p-4 shadow-sm">
                     <div className="flex items-center justify-between gap-4">
