@@ -105,7 +105,7 @@ export default function Posts () {
     if (loading) return <Loading />
 
     return (
-        <div className="bg-gray-100 h-screen overflow-auto ">
+        <div className="bg-gray-100 min-h-screen mb-20 overflow-auto ">
 
             <nav >
                 <div 
@@ -153,23 +153,56 @@ export default function Posts () {
             
             {
             commentUserid ?
-            <div className="sticky bottom-0">
-                <div className="w-full bg-primary-green grid sm:grid-cols-3 justify-center p-2 sm:p-5 gap-4">
-                    {/* our pfp */}
-                    <div></div>
-                    <div className="flex gap-2">
-                        <img src={commentUserid?.pfp} alt="pfp" className=" aspect-square h-12 rounded-full ml-auto"  />
-                        <textarea 
-                        value={commentContent || ''}
-                        onChange={(e)=>{ setCommentContent(e.target.value) }}
-                        className='bg-white focus:outline-0 rounded-md resize-none w-full field-sizing-content p-2' id="comment-content" placeholder="Write your comments here..."></textarea>
-                    </div>
-                    <button 
-                    type="button"
-                    onClick={submitComment}
-                    className="cursor-pointer max-h-10 min-h-10 bg-primary-blue rounded-4xl text-white w-20 place-items-start ml-auto sm:mr-auto sm:ml-0 ">Submit</button>
-                </div>
+            // <div className="sticky bottom-0">
+            //     <div className="w-full bg-primary-green grid sm:grid-cols-3 justify-center p-2 sm:p-5 gap-4">
+            //         {/* our pfp */}
+            //         <div></div>
+            //         <div className="flex gap-2">
+            //             <img src={commentUserid?.pfp} alt="pfp" className=" aspect-square h-12 rounded-full ml-auto"  />
+            //             <textarea 
+            //             value={commentContent || ''}
+            //             onChange={(e)=>{ setCommentContent(e.target.value) }}
+            //             className='bg-white focus:outline-0 rounded-md resize-none field-sizing-content p-2' id="comment-content" placeholder="Write your comments here..."></textarea>
+            //         </div>
+            //         <button 
+            //         type="button"
+            //         onClick={submitComment}
+            //         className="cursor-pointer max-h-10 min-h-10 bg-primary-blue rounded-4xl text-white w-20 place-items-start ml-auto sm:mr-auto sm:ml-0 ">Submit</button>
+            //     </div>
 
+            // </div>
+
+
+            <div className="sticky w-full bottom-0 min-h-20 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.2)] p-4">
+                <div className="max-w-3xl mx-auto flex  gap-3">
+                    
+                    {/* Avatar */}
+                    <img 
+                        src={commentUserid?.pfp} 
+                        alt="pfp" 
+                        className="aspect-square h-9 w-9 rounded-full shrink-0 mb-1" 
+                    />
+
+                    {/* Input */}
+                    <textarea
+                        value={commentContent || ''}
+                        onChange={(e) => setCommentContent(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitComment() } }}
+                        rows={1}
+                        className="flex-1 bg-gray-100 rounded-2xl px-4 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-blue field-sizing-content"
+                        placeholder="Write a comment..."
+                    />
+
+                    {/* Submit */}
+                    <button
+                        type="button"
+                        onClick={submitComment}
+                        className="cursor-pointer max-h-10 shrink-0 bg-primary-blue text-white text-sm font-semibold px-4 py-2 rounded-2xl hover:opacity-90 mb-1"
+                    >
+                        Post
+                    </button>
+
+                </div>
             </div>
 
             :

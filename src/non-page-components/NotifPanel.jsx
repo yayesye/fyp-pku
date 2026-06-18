@@ -121,7 +121,7 @@ export default function NotifBar({open, func}) {
 
             
             {/* this is the notif panel */}
-            <div className= {`absolute h-full sm:w-100 w-full bg-gray-200 ml-auto inset-0 animate-right sm:pr-4 ${open ? 'animate-slideIn' : 'animate-slideOut'}`}>
+            <div className= {`absolute h-full sm:w-100 w-full bg-gray-200 ml-auto inset-0 sm:pr-4 ${open ? 'animate-slideIn' : 'animate-slideOut'}`}>
 
                 <div className="mx-5 mb-5 mt-5 rounded-md bg-white p-4 shadow-sm">
                     <div className="flex items-center justify-between gap-4">
@@ -144,15 +144,12 @@ export default function NotifBar({open, func}) {
                     {pushMessage && <p className="mt-3 text-sm text-gray-600">{pushMessage}</p>}
                 </div>
 
+
                 {/* this is the top X button */}
                 <div className='w-full flex p-5'>
-                    {/* <i className=' ml-auto fas fa-x text-primary-green text-2xl cursor-pointer'></i> */}
-                    <i className=' ml-auto fas fa-x text-primary-green text-xl cursor-pointer'
-                    // onClick={()=>{setNotifBar(false)}}></i>
+                    <i className='ml-auto fas fa-x text-primary-green text-xl cursor-pointer'
                     onClick={func}></i>
                 </div>
-
-                
 
 
                 {/* this is the content */}

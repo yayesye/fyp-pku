@@ -11,6 +11,7 @@ import Loading from './non-page-components/Loading';
 import { createPortal } from 'react-dom';
 import Admin from './non-page-components/Admin';
 import EditBar from './non-page-components/EditBar';
+import Settings from './non-page-components/Settings'
 
 
 
@@ -36,7 +37,17 @@ export default function Dashboard () {
     const [Panel, setPanel] = useState(false)
     const [closePanel, setClosePanel] = useState(false)
 
+    const [SettingsPanel, setSettingsPanel] = useState(false)
+    const [closeSettings, setCloseSettings] = useState(false)
+
     const sleep = (ms) => { new Promise(e => setTimeout(e,ms)) }
+
+    const [likedPosts, setLikedPosts] = useState({})
+
+    async function handleLike(postID, isLiked, currentCount) {
+        const newCount = isLiked ? currentCount + 1 : currentCount - 1
+        await supabase.from('BulletinPosts').update({ likeCount: newCount }).eq('postID', postID)
+    }
 
 
     async function handleLogout () {
@@ -132,40 +143,26 @@ export default function Dashboard () {
                 </div>
 
 
-                {/* this is the notification bar */}
-                {/* <div className='ml-auto'>
-                    <i className='fas fa-bell text-primary-yellow cursor-pointer text-3xl'
-                    onClick={()=>setPanel(true)}
-                    ></i>
-                    <NotifPanel open={Panel} func={()=>setPanel(false)} />
-                </div> */}
-
-
-
                 {/* this is the user icon things */}
                 
                 {user ? 
                 <div className='ml-auto flex h-full'>
 
-                    {/* this is the notification panel */}
-
-                    <div className='ml-auto mr-4 content-center'>
-                        <i className='fas fa-bell text-primary-yellow cursor-pointer text-2xl'
-                        onClick={()=>setPanel(true)}
-                        ></i>
-                        <NotifPanel open={Panel} func={()=>setPanel(false)} />
+                    {/* this is the settings */}
+                    <div className='mr-4 content-center '>
+                        <i className='fas fa-gear cursor-pointer text-2xl text-gray-700'
+                        onClick={()=>setSettingsPanel(true)}></i>
+                        {/* <i className='fas fa-angle-down text-xl'></i> */}
+                        <Settings open={SettingsPanel} func={()=>setSettingsPanel(false)} />
                     </div>
 
-                   
 
-
-                    {/* this is the settings */}
-                    {/* <div className='grid place-items-center mr-5 pt-3 '>
-                        <i className='fas fa-gear text-2xl text-gray-700'></i>
-                        <i className='fas fa-angle-down text-xl'></i>
-                        
-                        
-                    </div> */}
+                    {/* this is the notification panel */}
+                    <div className='ml-auto mr-4 content-center'>
+                        <i className='fas fa-bell text-primary-yellow cursor-pointer text-2xl'
+                        onClick={()=>setPanel(true)}></i>
+                        <NotifPanel open={Panel} func={()=>setPanel(false)} />
+                    </div>
 
 
                     {/* this is the name and logo */}
@@ -214,10 +211,12 @@ export default function Dashboard () {
             <div className='text-2xl font-bold ml-20 text-primary-blue inline-block mt-10'>Recent Posts</div>
             
             <div className="p-8 flex gap-6 flex-wrap">
-                {
-                post?.map(p => (
-                    <div key={p.postID} className="bg-white rounded-xl p-8 w-full shadow cursor-pointer hover:shadow-md"
-                        onClick={() => navigate(`/posts/${p?.postID}`)}>
+            {post?.map(p => {
+                const isLiked = likedPosts[p.postID] ?? false
+                const displayCount = p.likeCount + (isLiked ? 1 : 0)
+
+                return (
+                    <div key={p.postID} className="bg-white rounded-xl p-8 w-full shadow hover:shadow-md">
 
                         <div>
                             {p.FileAttachment?.fileURL 
@@ -226,15 +225,27 @@ export default function Dashboard () {
                             } 
                         </div>
 
-                        <h1 className="font-bold text-primary-blue text-2xl hover:underline truncate">{p.title}</h1>
+                        <h1 
+                        onClick={() => navigate(`/posts/${p?.postID}`)}
+                        className="font-bold text-primary-blue text-2xl hover:underline cursor-pointer truncate">{p.title}</h1>
+
                         <div className='flex items-center gap-2 mt-5'>
                             <span>Made by:</span>
                             <img className='rounded-full max-h-7' src={`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${p.Users?.userName[0]}`}/>
                             <p className="text-lg text-primary-blue font-bold">{p.Users?.userName}</p>
+
+                            <i 
+                            className={`${isLiked ? 'fas' : 'far'} fa-heart cursor-pointer ml-auto text-2xl text-primary-blue`} 
+                            onClick={() => {
+                                const newLiked = !likedPosts[p.postID]
+                                setLikedPosts(prev => ({ ...prev, [p.postID]: newLiked }))
+                                handleLike(p.postID, newLiked, p.likeCount)
+                            }}
+                            ></i>
+                            <span>{displayCount}</span>
                         </div>
 
-                    </div>
-                ))}
+                    </div>)})}
             </div>
 
         </div>
