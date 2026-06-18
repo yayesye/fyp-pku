@@ -100,7 +100,7 @@ export default function MakeAnnouncement() {
 
             {/* this is the create post banner */}
             <div className="h-20 bg-primary-yellow text-white text-center font-bold text-2xl flex items-center justify-between">
-                <nav className="w-20"><Link to="-1"><i className="fa-solid fa-arrow-left fa-xl p-5"></i></Link></nav>
+                <nav className="w-20"><Link to={-1}><i className="fa-solid fa-arrow-left fa-xl p-5"></i></Link></nav>
                 <h1>Make Announcement</h1>
                 <div className="w-20"></div> {/* this is a placeholder div */}
             </div>

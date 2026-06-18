@@ -127,7 +127,7 @@ export default function Dashboard () {
                     <i className="fa-solid fa-bullhorn invert fa-xl"></i>
                 </div>
                 <div className="ml-4">
-                    <h1 className=" sm:text-sm text-xl font-bold text-primary-blue" >NewsNow PKU </h1>
+                    <h1 className=" text-sm md:text-xl font-bold text-primary-blue" >NewsNow PKU </h1>
                     <h2 className=" hidden sm:block text-sm text-[#7B8794]">Universiti Malaysia Pahang Sultan Abdullah</h2>
                 </div>
 
