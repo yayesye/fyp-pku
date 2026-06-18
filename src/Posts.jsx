@@ -152,7 +152,7 @@ export default function Posts () {
             {/* textbox area */}
             
             {
-            loggedIn ?
+            commentUserid ?
             <div>
                 
                 <div>
