@@ -39,7 +39,7 @@ export default function EditBar({role}) {
                 <i className='fas fa-bell fa-xl invert'></i>
                 <h2 className='text-white text-center font-bold text-xl '>Announcement</h2>                    
             </div>
-            <div className=' m-5 mt-0 md:mt-5 h-20 bg-red-600 hover:bg-red-800 rounded-xl cursor-pointer flex items-center justify-center gap-3' onClick={() => navigate(`/announcement`)}>
+            <div className=' m-5 mt-0 md:mt-5 h-20 bg-red-600 hover:bg-red-800 rounded-xl cursor-pointer flex items-center justify-center gap-3' onClick={() => navigate(`/delete`)}>
                 <i className='fas fa-trash fa-xl invert'></i>
                 <h2 className='text-white text-center font-bold text-xl '>Delete Posts</h2>                    
             </div>

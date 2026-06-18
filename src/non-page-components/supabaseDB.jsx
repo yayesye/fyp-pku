@@ -47,6 +47,7 @@ export async function fetchAllPosts() {
             `)
         .order('created_at', {ascending: false})
 
+
     if (error) console.log('Error: ',error)
 
     return data
