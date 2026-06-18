@@ -140,7 +140,7 @@ export default function MakeAnnouncement() {
                 onClick={(e)=>{e.preventDefault(); handleSubmitAll();} }
                 className=" text-white bg-primary-yellow hover:brightness-110  cursor-pointer rounded-xl h-12 mt-8 min-w-50 self-end-safe ">Create</button>
 
-                {Done && <GoodBox message='Posted!!' onDismiss={()=>navigate('-1')} /> }
+                {Done && <GoodBox message='Posted!!' onDismiss={()=>navigate(-1)} /> }
 
             </div>
             </form>
