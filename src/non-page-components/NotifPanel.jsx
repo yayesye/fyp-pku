@@ -8,10 +8,22 @@ export default function NotifBar({open, func}) {
     const [announcements, setAnnouncements] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
+    const [pushEnabled, setPushEnabled] = useState(false)
+    const [pushLoading, setPushLoading] = useState(false)
+    const [pushMessage, setPushMessage] = useState("")
 
     useEffect(()=>{
-        enablePushNotifications().catch((error) => {
-            console.error("Push notification setup failed:", error)
+        async function checkPushStatus() {
+            if (!("serviceWorker" in navigator) || !("PushManager" in window)) return
+
+            const registration = await navigator.serviceWorker.ready
+            const subscription = await registration.pushManager.getSubscription()
+
+            setPushEnabled(Boolean(subscription))
+        }
+
+        checkPushStatus().catch((error) => {
+            console.error("Push notification status check failed:", error)
         })
     },[])
 
@@ -48,6 +60,45 @@ export default function NotifBar({open, func}) {
         fetchAnnouncements()
     }, [open])
 
+    async function disablePushNotifications() {
+        if (!("serviceWorker" in navigator) || !("PushManager" in window)) return
+
+        const registration = await navigator.serviceWorker.ready
+        const subscription = await registration.pushManager.getSubscription()
+
+        if (subscription) {
+            await subscription.unsubscribe()
+        }
+
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if (user) {
+            await supabase.from("PushSubscriptions").delete().eq("userID", user.id)
+        }
+    }
+
+    async function handlePushToggle() {
+        setPushLoading(true)
+        setPushMessage("")
+
+        try {
+            if (pushEnabled) {
+                await disablePushNotifications()
+                setPushEnabled(false)
+                setPushMessage("Push notifications are off.")
+            } else {
+                await enablePushNotifications()
+                setPushEnabled(true)
+                setPushMessage("Push notifications are on.")
+            }
+        } catch (error) {
+            console.error("Push notification toggle failed:", error)
+            setPushMessage(error.message || "Could not update push notifications.")
+        } finally {
+            setPushLoading(false)
+        }
+    }
+
     return createPortal (
         <div className={`bg-black/50  backdrop-blur-sm inset-0 fixed items-center justify-center h-screen w-screen ${open? 'pointer-events-auto':'pointer-events-none opacity-0'} `}>
 
@@ -66,6 +117,27 @@ export default function NotifBar({open, func}) {
                     <i className=' ml-auto fas fa-x text-primary-green text-xl cursor-pointer'
                     // onClick={()=>{setNotifBar(false)}}></i>
                     onClick={func}></i>
+                </div>
+
+                <div className="mx-5 mb-5 rounded-md bg-white p-4 shadow-sm">
+                    <div className="flex items-center justify-between gap-4">
+                        <div>
+                            <h2 className="font-bold text-primary-blue">Push Notification</h2>
+                            <p className="text-sm text-gray-500">{pushEnabled ? "On" : "Off"}</p>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={handlePushToggle}
+                            disabled={pushLoading}
+                            className={`relative h-8 w-14 rounded-full transition-colors disabled:opacity-60 ${pushEnabled ? "bg-primary-green" : "bg-gray-400"}`}
+                            aria-pressed={pushEnabled}
+                            aria-label="Toggle push notifications"
+                        >
+                            <span className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow transition-transform ${pushEnabled ? "translate-x-7" : "translate-x-1"}`}></span>
+                        </button>
+                    </div>
+                    {pushMessage && <p className="mt-3 text-sm text-gray-600">{pushMessage}</p>}
                 </div>
 
 
