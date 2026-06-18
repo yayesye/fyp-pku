@@ -110,12 +110,12 @@ export default function Profile () {
                                 <span className=" text-white">Edit</span>
                             </button>
                             <button 
-                            onClick={()=>setDelPID(p.postIDg)}
+                            onClick={()=>setDelPID(p.postID)}
                             value="Delete"  className="p-2 rounded-md bg-red-700 min-w-25 cursor-pointer hover:bg-red-500" >
                                 <i className="fas fa-trash mr-2 invert"></i>
                                 <span className=" text-white">Delete</span>
                             </button>
-                            {DelPID && <NeutralBox message={'Delete Posts?'} Yes={()=>handleDelete(p.postID)} No={ ()=>setDelPID(null) } />}
+                            {DelPID && <NeutralBox message={'Delete Posts?'} Yes={()=>handleDelete(p.postID)} No={()=>setDelPID(null) } />}
                             {Success && <GoodBox message='Post Deleted!' onDismiss={ ()=> {setSuccess(false), fetchProfilePosts()} } />}
                         </div>
                         }

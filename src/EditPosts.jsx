@@ -87,6 +87,10 @@ export default function EditPosts() {
     
 
     async function updatePost (attachmentID)  {
+        const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+        if (userError) throw userError
+        if (!user) throw new Error('You must be logged in to edit this post.')
 
         const updatedPost = {
             categoryID: postForm.categoryID,
@@ -110,9 +114,11 @@ export default function EditPosts() {
                 attachmentID,
                 FileAttachment(fileURL)
             `)
-            .single()
+            .eq('userID', user.id)
+            .maybeSingle()
 
         if (error) throw error
+        if (!data) throw new Error('No post was updated. Check that you own this post and that Supabase allows updates on BulletinPosts.')
 
         return data
     }
@@ -131,9 +137,9 @@ export default function EditPosts() {
             console.log('Done!', { attachment, post })
             
         } catch (error) {
-            console.log('Error: ', error)
+            console.error('Error: ', error)
             setError(true)
-            setErrorMessage('Post could not be updated.')
+            setErrorMessage(error.message || 'Post could not be updated.')
         } finally {
             setSaving(false)
         }
