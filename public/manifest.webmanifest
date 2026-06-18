@@ -1,0 +1,17 @@
+{
+  "name": "NewsNow",
+  "short_name": "NewsNow",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#2ca69e",
+  "theme_color": "#2ca69e",
+  "icons": [
+    {
+      "src": "/favicongreen.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
