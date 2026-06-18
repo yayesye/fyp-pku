@@ -44,12 +44,12 @@ export default function MakeAnnouncement() {
 
     
 
-    async function insertPost ()  {
+    async function insertAnnouncement ()  {
 
         const userid = (await supabase.auth.getUser()).data.user.id
 
         const { data, error } = await supabase
-            .from('BulletinPosts')
+            .from('Announcement')
             .insert({ ...postForm, userID: userid}) 
             .select()
 
@@ -77,14 +77,15 @@ export default function MakeAnnouncement() {
         try {
             setError(false)
             setErrorMessage("")
-            const post = await insertPost()
+            const announcement = await insertAnnouncement()
             wasPosted = true
 
             const { error: pushError } = await supabase.functions.invoke("send-announcement-push", {
                 body: {
                     title: postForm.title,
                     description: postForm.description,
-                    postID: post[0].postID
+                    postID: announcement[0].announcementID,
+                    announcementID: announcement[0].announcementID
                 }
             })
 
@@ -93,7 +94,7 @@ export default function MakeAnnouncement() {
             }
 
             setDone(true)
-            console.log("Done!", { post })
+            console.log("Done!", { announcement })
 
         } catch (error) {
             console.error("Error: ", error)

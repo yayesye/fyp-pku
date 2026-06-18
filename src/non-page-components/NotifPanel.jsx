@@ -1,14 +1,52 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
+import { supabase } from "./supabaseDB"
 import { enablePushNotifications } from "./pushNotifications"
 
 export default function NotifBar({open, func}) {
+
+    const [announcements, setAnnouncements] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
 
     useEffect(()=>{
         enablePushNotifications().catch((error) => {
             console.error("Push notification setup failed:", error)
         })
     },[])
+
+    useEffect(() => {
+        if (!open) return
+
+        async function fetchAnnouncements() {
+            setLoading(true)
+            setError("")
+
+            const { data, error } = await supabase
+                .from("Announcement")
+                .select(`
+                    announcementID,
+                    title,
+                    description,
+                    created_at,
+                    Category(categoryName)
+                `)
+                .eq("status", "ACTIVE")
+                .order("created_at", { ascending: false })
+                .limit(10)
+
+            if (error) {
+                console.error("Error fetching announcements:", error)
+                setError("Could not load announcements.")
+            } else {
+                setAnnouncements(data ?? [])
+            }
+
+            setLoading(false)
+        }
+
+        fetchAnnouncements()
+    }, [open])
 
     return createPortal (
         <div className={`bg-black/50  backdrop-blur-sm inset-0 fixed items-center justify-center h-screen w-screen ${open? 'pointer-events-auto':'pointer-events-none opacity-0'} `}>
@@ -32,24 +70,42 @@ export default function NotifBar({open, func}) {
 
 
                 {/* this is the content */}
-                <div className="p-5 -mt-0.5 inset-ring-2 inset-ring-gray-300 flex ">
-                    <div>
-                        <h1 className="font-bold underline">Title</h1>
-                        <p>Content</p>
+                {loading && (
+                    <div className="p-5 -mt-0.5 inset-ring-2 inset-ring-gray-300">
+                        <p className="text-gray-500">Loading announcements...</p>
                     </div>
-                    <div className=" content-center ml-auto">
-                        <i className="fas fa-check cursor-pointer" title="Mark As Read"></i>
+                )}
+
+                {!loading && error && (
+                    <div className="p-5 -mt-0.5 inset-ring-2 inset-ring-gray-300">
+                        <p className="text-error-text">{error}</p>
                     </div>
-                </div>
-                <div className="p-5 -mt-0.5 inset-ring-2 inset-ring-gray-300 flex ">
-                    <div>
-                        <h1 className="font-bold underline">Title</h1>
-                        <p>Content</p>
+                )}
+
+                {!loading && !error && announcements.length === 0 && (
+                    <div className="p-5 -mt-0.5 inset-ring-2 inset-ring-gray-300">
+                        <p className="text-gray-500">No announcements yet.</p>
                     </div>
-                    <div className=" content-center ml-auto">
-                        <i className="fas fa-check cursor-pointer" title="Mark As Read"></i>
+                )}
+
+                {!loading && !error && announcements.map((announcement) => (
+                    <div
+                        key={announcement.announcementID}
+                        className="p-5 -mt-0.5 inset-ring-2 inset-ring-gray-300 flex"
+                    >
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                                <h1 className="font-bold underline truncate">{announcement.title}</h1>
+                                {announcement.Category?.categoryName && (
+                                    <span className="text-xs bg-primary-blue text-white rounded-md px-2 py-1 shrink-0">
+                                        {announcement.Category.categoryName}
+                                    </span>
+                                )}
+                            </div>
+                            <p className="line-clamp-2 text-sm text-gray-700">{announcement.description}</p>
+                        </div>
                     </div>
-                </div>
+                ))}
                 
             </div>
             
