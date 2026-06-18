@@ -149,16 +149,23 @@ export default function Dashboard () {
 
                     {/* this is the notification panel */}
 
+                    <div className='ml-auto mr-4 content-center'>
+                        <i className='fas fa-bell text-primary-yellow cursor-pointer text-2xl'
+                        onClick={()=>setPanel(true)}
+                        ></i>
+                        <NotifPanel open={Panel} func={()=>setPanel(false)} />
+                    </div>
+
                    
 
 
                     {/* this is the settings */}
-                    <div className='grid place-items-center mr-5 pt-3 '>
+                    {/* <div className='grid place-items-center mr-5 pt-3 '>
                         <i className='fas fa-gear text-2xl text-gray-700'></i>
                         <i className='fas fa-angle-down text-xl'></i>
                         
                         
-                    </div>
+                    </div> */}
 
 
                     {/* this is the name and logo */}

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Protected from './non-page-components/Protected.jsx';
 
@@ -26,17 +26,8 @@ export default function App() {
 	async function registerSW() {
 		if (!('serviceWorker' in navigator)) return
 
-		const permission = await Notification.requestPermission()
-		if (permission !== 'granted') return
-
 		await navigator.serviceWorker.register('/sw.js')
 	}
-
-	// call this wherever you want to show a notification
-	async function showNotification(title, body) {
-		const reg = await navigator.serviceWorker.ready
-		reg.showNotification(title, { body, icon: '/public/favicon.png' })
-	}	
 
 	useEffect(() => {
 		registerSW()

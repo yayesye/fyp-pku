@@ -1,15 +1,26 @@
+import { useEffect } from "react"
 import { createPortal } from "react-dom"
+import { enablePushNotifications } from "./pushNotifications"
 
 export default function NotifBar({open, func}) {
+
+    useEffect(()=>{
+        enablePushNotifications().catch((error) => {
+            console.error("Push notification setup failed:", error)
+        })
+    },[])
 
     return createPortal (
         <div className={`bg-black/50  backdrop-blur-sm inset-0 fixed items-center justify-center h-screen w-screen ${open? 'pointer-events-auto':'pointer-events-none opacity-0'} `}>
 
             
             {/* this is the notif panel */}
-            <div key={open? 'open' : 'close'} className= {`absolute h-full w-100 bg-gray-200 ml-auto inset-0 animate-right pr-4 ${open? 'animate-slideIn' : 'animate-slideOut' } `} >
+            <div key={open? 'open' : 'close'} className= 'absolute h-full sm:w-100 w-full bg-gray-200 ml-auto inset-0 animate-right pr-4 animate-slideIn'>
 
-                {console.log('key: ', open? 'open':'close')}
+                <div className="mt-5 flex justify-center">
+                    <span className="font-bold">Push Notification</span>
+                    
+                </div>
 
                 {/* this is the top X button */}
                 <div className='w-full flex p-5'>

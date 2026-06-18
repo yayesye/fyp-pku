@@ -1,22 +1,19 @@
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "./non-page-components/supabaseDB"
-import ImgBBUploadButton from "./non-page-components/ImgBBUploadButton"
 import CategoryDropdown from "./non-page-components/CategoryDropdown";
-import { GoodBox } from "./non-page-components/DisplayBox";
+import { ErrorBox, GoodBox } from "./non-page-components/DisplayBox";
 import Loading from "./non-page-components/Loading";
 
 export default function MakeAnnouncement() {
 
-    document.title = 'Announcement'
-
     const navigate = useNavigate()
 
-    const [imageData, setImageData] = useState({})
     const date = new Date().toISOString().slice(0, 10);
     const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
 
     const [Error, setError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
     const [Done, setDone] = useState(false)
 
     const [loading, setloading] = useState(false)
@@ -32,41 +29,28 @@ export default function MakeAnnouncement() {
     })      
 
 
+    useEffect(() => {
+        document.title = 'Announcement'
+    }, [])
 
     const handleChange = (e) => {
-        const { name, value, type, checked, files } = e.target; // 'name' not 'title'
+        const { name, value, type, checked } = e.target;
         setPostForm((prev) => ({
             ...prev,
             [name]  : type === 'checkbox' ? checked
-                    : type === 'file'     ? files[0]
                     : value,
         }));
     };
 
-
-    // removed the useEffect entirely, sbb only for fetch data
-    async function insertAttachment ()  {
-        const { data, error } = await supabase.from('FileAttachment')
-            .insert({ filename: imageData.name, fileURL: imageData.url }).select().single()
-
-        console.log(data)
-        return data
-        
-    }
-
-    // console.log(imageData)
-
     
 
-    async function insertPost (attachmentID)  {
+    async function insertPost ()  {
 
         const userid = (await supabase.auth.getUser()).data.user.id
-        console.log(userid)
 
-        console.log(attachmentID)
         const { data, error } = await supabase
             .from('BulletinPosts')
-            .insert({ ...postForm, userID: userid, attachmentID: attachmentID}) 
+            .insert({ ...postForm, userID: userid}) 
             .select()
 
 
@@ -75,24 +59,55 @@ export default function MakeAnnouncement() {
         return data
     }
 
-    async function handleSubmitAll() {
+    async function getFunctionErrorMessage(error) {
+        const fallback = error?.message || "Notification failed."
+
         try {
-            // const { data: { user } } = await supabase.auth.getUser()
-            const attachment = await insertAttachment()
-            const post = await insertPost(attachment.attachmentID)
-
-            setDone(true)
-
-            console.log('Done!', { attachment, post })
-            return <GoodBox message='Post Done!!' />
-            
-        } catch (error) {
-            console.log('Error: ',error)
+            const body = await error.context.json()
+            return body.error || fallback
+        } catch {
+            return fallback
         }
     }
 
-    if (loading) return <Loading />
+    async function handleSubmitAll() {
+        setloading(true)
+        let wasPosted = false
 
+        try {
+            setError(false)
+            setErrorMessage("")
+            const post = await insertPost()
+            wasPosted = true
+
+            const { error: pushError } = await supabase.functions.invoke("send-announcement-push", {
+                body: {
+                    title: postForm.title,
+                    description: postForm.description,
+                    postID: post[0].postID
+                }
+            })
+
+            if (pushError) {
+                throw new Error(await getFunctionErrorMessage(pushError))
+            }
+
+            setDone(true)
+            console.log("Done!", { post })
+
+        } catch (error) {
+            console.error("Error: ", error)
+            setError(true)
+            setErrorMessage(wasPosted ? `Posted, but notification failed: ${error.message}` : "Announcement could not be posted.")
+            setDone(false)
+        } finally {
+            setloading(false)
+        }
+    }
+
+
+    
+    if (loading) return <Loading />
 
        
     return (
@@ -109,10 +124,6 @@ export default function MakeAnnouncement() {
             <form >
             <div className="bg-white shadow w-screen md:w-2/3 h-full justify-self-center flex p-8 flex-col justify-start gap-4 ">
                 
-                {/* <div className="bg-primary-yellow rounded-lg w-fit">
-                    <ImgBBUploadButton onUpload={ ({url, name}) => { setImageData({url, name}) } } />
-                </div> */}
-
                 <label htmlFor="userName">
                     <h2 className=" font-bold text-primary-yellow pb-2" >Title</h2>
                     <input 
@@ -141,6 +152,7 @@ export default function MakeAnnouncement() {
                 className=" text-white bg-primary-yellow hover:brightness-110  cursor-pointer rounded-xl h-12 mt-8 min-w-50 self-end-safe ">Create</button>
 
                 {Done && <GoodBox message='Posted!!' onDismiss={()=>navigate(-1)} /> }
+                {Error && <ErrorBox message={errorMessage} onDismiss={()=>setError(false)} /> }
 
             </div>
             </form>

@@ -184,7 +184,7 @@ export default function Auth() {
 
 
                         {/* this is the submit button */}
-                        <button onClick={handleLogin} className=" mt-3 text-white bg-hover-green hover:bg-primary-green cursor-pointer w-full rounded-xl h-12" type="button">Login</button>
+                        <button onClick={handleLogin} className=" mt-3 text-white bg-hover-green hover:bg-primary-green cursor-pointer w-full rounded-xl h-12">Login</button>
                     </div>
 
 
