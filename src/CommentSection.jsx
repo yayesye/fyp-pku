@@ -75,7 +75,7 @@ function Comments({ comment, onReply, onDelete, currentUserid }) {
                 ))}
             </div>
 
-            {delComment && <NeutralBox message={delComment} onDismiss={()=>onDelete(comment.commentID)} /> }
+            {delComment && <NeutralBox message={delComment} No={()=>setdelComment(null)} Yes={()=>{onDelete(comment.commentID); setdelComment(null)}} /> }
         </div>
     )
 }

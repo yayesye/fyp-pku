@@ -96,7 +96,7 @@ export default function Auth() {
         <div className="bg-gray-100 min-h-screen">
             <header className="bg-white shadow flex h-20 items-center pl-[20%]">
                 {/* icon and horn */}
-                <div className="bg-primary-green aspect-square h-3/5 rounded-md items-center flex justify-center">
+                <div onClick={()=>navigate('/')} className=" cursor-pointer bg-primary-green aspect-square h-3/5 rounded-md items-center flex justify-center">
                     <i className="fa-solid fa-bullhorn invert fa-xl"></i>
                 </div>
                 <div className="ml-4">
@@ -177,7 +177,7 @@ export default function Auth() {
                             </label> */}
 
 
-                            <button className=" self-start text-[#00A79D] text-[14px] ml-0 md:ml-auto cursor-pointer ">Forgot Password?</button>
+                            <button type="button" className=" self-start text-[#00A79D] text-[14px] ml-0 md:ml-auto cursor-pointer ">Forgot Password?</button>
                         </div>
 
                         {/* {errorMsg && <ErrorBox message={errorMsg} onDismiss={()=>{setErrorMsg(null)}} />} */}

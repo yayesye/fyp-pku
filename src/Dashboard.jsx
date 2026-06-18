@@ -3,7 +3,7 @@ import { useState,useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase, fetchCurrentUser } from './non-page-components/supabaseDB';
 
-import {ErrorBox, GoodBox} from './non-page-components/DisplayBox'
+import {ErrorBox, GoodBox, NeutralBox} from './non-page-components/DisplayBox'
 import NotifPanel from './non-page-components/NotifPanel';
 
 import Posts from './Posts';
@@ -127,7 +127,7 @@ export default function Dashboard () {
                     <i className="fa-solid fa-bullhorn invert fa-xl"></i>
                 </div>
                 <div className="ml-4">
-                    <h1 className=" text-sm md:text-xl font-bold text-primary-blue" >NewsNow PKU </h1>
+                    <h1 className=" text-lg sm:text-xl font-bold text-primary-blue" >NewsNow</h1>
                     <h2 className=" hidden sm:block text-sm text-[#7B8794]">Universiti Malaysia Pahang Sultan Abdullah</h2>
                 </div>
 
@@ -143,34 +143,53 @@ export default function Dashboard () {
 
 
                 {/* this is the user icon things */}
-                {console.log(user)}
-                {user ? ( 
-                <div className=' w-40 flex justify-end group cursor-pointer h-full ml-auto items-center'>
-                    <div className=' mr-4 h-full content-center '>
-                        <img src={user?.pfp} className='rounded-full aspect-square h-11' alt="this the user pfp" /> 
-                    </div>
-                    <div className='hidden md:block md:mr-5'>
-                        <h1 className="text-lg text-center font-bold text-primary-blue"> {user && user.userName} </h1> 
-                        <div className='bg-primary-blue rounded-md pl-2 pr-2 p-1'><h2 className=" text-center text-primary-yellow font-bold text-xs"> {user && user.userRole} </h2></div>
+                
+                {user ? 
+                <div className='ml-auto flex h-full'>
+
+                    {/* this is the notification panel */}
+
+                   
+
+
+                    {/* this is the settings */}
+                    <div className='grid place-items-center mr-5 pt-3 '>
+                        <i className='fas fa-gear text-2xl text-gray-700'></i>
+                        <i className='fas fa-angle-down text-xl'></i>
+                        
+                        
                     </div>
 
-                    <div onClick={handleLogout} className=' hidden group-hover:flex cursor-pointer absolute top-20 w-40 right-0 bg-red-300 justify-center p-3 hover:bg-red-600 shadow'>
-                        <i className="fas fa-sign-out-alt fa-xl text-primary-blue self-center content-center h-full"></i>
-                        <h2 className='font-bold inline '>Logout</h2>
+
+                    {/* this is the name and logo */}
+                    <div className='flex justify-end group h-full cursor-pointer items-center'>
+
+                        <div className=' mr-4 h-full content-center '>
+                            <img src={user?.pfp} className='rounded-full aspect-square h-11' alt="this the user pfp" /> 
+                        </div>
+                        <div className='hidden md:block md:mr-5'>
+                            <h1 className="text-lg text-center font-bold text-primary-blue"> {user && user.userName} </h1> 
+                            <div className='bg-primary-blue rounded-md pl-2 pr-2 p-1'><h2 className=" text-center text-primary-yellow font-bold text-xs"> {user && user.userRole} </h2></div>
+                        </div>
+
+                        <div onClick={handleLogout} className=' hidden group-hover:flex cursor-pointer absolute top-20 w-40 right-0 bg-red-300 justify-center p-3 hover:bg-red-600 shadow'>
+                            <i className="fas fa-sign-out-alt fa-xl text-primary-blue self-center content-center h-full"></i>
+                            <h2 className='font-bold inline '>Logout</h2>
+                        </div>
+                        
                     </div>
-                    
                 </div>
-                )
+                
 
                 :  // if else
 
-                (
+                
                 <div className='ml-auto'>
                     <div className='p-2 pr-3 pl-3 cursor-pointer text-white bg-primary-blue hover:bg-hover-blue rounded-md mr-5' onClick={()=>{navigate('/auth')}}>
                         <h2>Login/Signup</h2>
                     </div>
                 </div>
-                )
+                
 
                 
                 }
