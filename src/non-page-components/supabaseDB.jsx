@@ -25,12 +25,12 @@ export async function fetchCurrentUser(func) {
     let UserID = null
     // get current user id
     const { data: {session}, error:AuthError } = await supabase.auth.getSession()
-    AuthError? console.log('Error fetching user: ',AuthError) : UserID = session?.user?.id
+    AuthError? console.error('Error fetching user: ',AuthError) : UserID = session?.user?.id
 
     // get all user info inside the Users column
     const {data:userData, error:ColumnError } = await supabase.from('Users').select('*').eq('userID',UserID).single()
     
-    if (ColumnError) console.log('Error fetching from Users: ',ColumnError)
+    if (ColumnError) console.error('Error fetching from Users: ',ColumnError)
 
     if (userData) userData.pfp = `https://ui-avatars.com/api/?background=264688&color=fff&name=${userData?.userName[0]}`
 

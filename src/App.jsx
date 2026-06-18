@@ -49,9 +49,9 @@ export default function App() {
 
       <BrowserRouter>
         <Routes>
-          <Route index element={<Auth />} />
-          <Route path="dashboard" element={ <Protected>  <Dashboard />  </Protected> } />
-          <Route path="posts/:postid" element={ <Protected>  <Posts />  </Protected>  } />
+          <Route index element={ <Dashboard />  } />
+          <Route path="auth" element={<Auth />} />
+          <Route path="posts/:postid" element={ <Posts /> } />
 
           <Route path="create" element={ <Protected>  <CreatePosts />  </Protected>  } />
           <Route path="edit/:postid" element={ <Protected>  <EditPosts />  </Protected>  } />

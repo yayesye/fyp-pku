@@ -32,7 +32,7 @@ export default function Auth() {
         const { data, error } = await supabase.auth.signInAnonymously()
         if (error) {console.log('Error: ',error)}
         else {
-            navigate('dashboard')
+            navigate('/')
         }
     }
 
@@ -47,7 +47,7 @@ export default function Auth() {
             password: loginData.password
         })
 
-        error ? (setloading(false),setErrorMsg(error.message)) : navigate('/dashboard')
+        error ? (setloading(false),setErrorMsg(error.message)) : navigate('/')
 
         
     }

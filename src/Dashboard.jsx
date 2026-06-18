@@ -25,7 +25,7 @@ export default function Dashboard () {
     const navigate = useNavigate()
     const parameter = useParams()
 
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(null)
     const [pfp, setpfp] = useState()
     const [post, setpost] = useState([])
 
@@ -40,6 +40,7 @@ export default function Dashboard () {
 
 
     async function handleLogout () {
+        
         setloading(true)
         const {data, error} = await supabase.auth.signOut()
 
@@ -48,6 +49,8 @@ export default function Dashboard () {
             setloading(false)
         }
 
+
+        setUser(null)
         setloading(false)
 
     }
@@ -76,38 +79,6 @@ export default function Dashboard () {
         // CHANGE TITLE NAME 
         document.title = "Dashboard"
 
-        // THIS IS THE OLD FETCH USER, NOW I USE FETCH USER FROM SUPABASE COMPONENT INSTEAD
-        // async function fetchUser() {
-            
-        //     const {data: {user}} = await supabase.auth.getUser()
-        //     const userid = user.id
-        //     setuserid(userid)
-
-
-        //     const { data, error } = await supabase.from('Users').select('userName, userRole').eq('userID', userid).single()
-
-        //     if (error) {
-        //         console.error('Error fetching:', error)
-        //         return
-        //     }
-
-        //     // console.log('Current user id: '+userid)
-        //     // console.log('Current user name: '+data.userName)
-        //     // console.log('Current user role: '+data.userRole)
-        //     // console.log(data)
-
-        //     if (!data.userName){
-        //         setUser({userName: 'Anonymous', userRole: 'Anonymous'})
-        //         setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=A`)
-        //     }
-
-        //     // console.log(data.userName)
-
-        //     setUser(data)
-        //     setpfp(`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${data.userName[0]}`)
-
-        // }
-
 
         async function fetchAllPosts() {
             const { data, error } = await supabase.from('BulletinPosts')
@@ -131,10 +102,9 @@ export default function Dashboard () {
 
         async function fetchAll() {
 
-            // fetch current user is from supabase component
-            // setUser(await fetchCurrentUser())
+            
             setUser(await fetchCurrentUser())
-            // fetchUser()
+            
             fetchAllPosts()
             setTimeout(()=>{setloading(false)},200)
             // setloading(false)
@@ -173,13 +143,15 @@ export default function Dashboard () {
 
 
                 {/* this is the user icon things */}
+                {console.log(user)}
+                {user ? ( 
                 <div className=' w-40 flex justify-end group cursor-pointer h-full ml-auto items-center'>
                     <div className=' mr-4 h-full content-center '>
                         <img src={user?.pfp} className='rounded-full aspect-square h-11' alt="this the user pfp" /> 
                     </div>
                     <div className='hidden md:block md:mr-5'>
-                        <h1 className="text-lg text-center font-bold text-primary-blue"> {user?.userName} </h1> 
-                        <div className='bg-primary-blue rounded-md pl-2 pr-2 p-1'><h2 className=" text-center text-primary-yellow font-bold text-xs"> {user?.userRole} </h2></div>
+                        <h1 className="text-lg text-center font-bold text-primary-blue"> {user && user.userName} </h1> 
+                        <div className='bg-primary-blue rounded-md pl-2 pr-2 p-1'><h2 className=" text-center text-primary-yellow font-bold text-xs"> {user && user.userRole} </h2></div>
                     </div>
 
                     <div onClick={handleLogout} className=' hidden group-hover:flex cursor-pointer absolute top-20 w-40 right-0 bg-red-300 justify-center p-3 hover:bg-red-600 shadow'>
@@ -188,13 +160,27 @@ export default function Dashboard () {
                     </div>
                     
                 </div>
+                )
+
+                :  // if else
+
+                (
+                <div className='ml-auto'>
+                    <div className='p-2 pr-3 pl-3 cursor-pointer text-white bg-primary-blue hover:bg-hover-blue rounded-md mr-5' onClick={()=>{navigate('/auth')}}>
+                        <h2>Login/Signup</h2>
+                    </div>
+                </div>
+                )
+
+                
+                }
 
             </header>      
 
 
 
             {/* this is the top create bar based on user role */}
-            <EditBar role={user.userRole} />
+            <EditBar role={user ?  user.userRole : null} />
 
 
             {/* this is the start of the bulletin posts */}

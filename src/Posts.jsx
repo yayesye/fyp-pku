@@ -17,6 +17,7 @@ export default function Posts () {
     const [commentContent, setCommentContent] = useState()
     const [commentUserid, setcommentUserid] = useState()
     const [timestamptz, setTime] = useState()
+    const [loggedIn, setloggedIn] = useState(false)
 
     const [loading,setloading] = useState(false)
     const [refresh, setrefresh] = useState(0)
@@ -34,7 +35,6 @@ export default function Posts () {
         status: 'ACTIVE'
     }
 
-    // console.log(commentFormat)
 
     async function submitComment() {
 
@@ -61,47 +61,7 @@ export default function Posts () {
         document.title = "Posts"
 
 
-        function changeDate(data) {
-            const parts = data.split('-')
-            const year = parts[0]
-            const monthIndex = parseInt(parts[1], 10) - 1
-            const day = parts[2]
-
-            const months = [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-            ]
-
-            return `${day} ${months[monthIndex]} ${year}`
-        }
-
-        
-
-        // async function test() {
-        //     const post = (await fetchAllPosts()).find(p => p.postID === 49);
-        //     console.log(post)
-
-        // }test()
-        
-
-
         async function fetchPosts() {
-            // THIS IS THE OLD FETCH, NOW WE JUST FILTER DATA FROM THE FETCHED POST AT SUPABASE DB COMPONENT
-            // const { data, error } = await supabase.from('BulletinPosts')
-            // .select(`
-            //     *,
-            //     FileAttachment(fileURL),
-            //     Users(userName),
-            //     Category(categoryName)
-            //     `)
-            // .eq('postID', param.postid)
-            // .single()
-
-
-            // if (error) {
-            //     console.error('Error fetching:', error)
-            //     return
-            // }
 
             const fetchPost = await fetchAllPosts()
             const data = fetchPost.find(p => p.postID === Number(param.postid) )
@@ -175,7 +135,7 @@ export default function Posts () {
                     <h3 className=" content-center">Made by: </h3>
                     <img src={pfp && pfp} className='rounded-full aspect-square h-8' alt="this the user pfp" /> 
                     <h1 className="text-md font-bold text-primary-blue content-center">{posts?.Users.userName}</h1> 
-                    <h1 className="ml-auto content-center">Published on:<strong className="ml-2">{posts?.publishDate}, {posts?.publishTime} </strong> </h1>
+                    <h1 className="ml-auto content-center"><strong className="ml-2">{posts?.publishDate}</strong> </h1>
                 </div>         
 
 
@@ -190,25 +150,35 @@ export default function Posts () {
             {/* this is the comment section area */}
 
             {/* textbox area */}
+            
+            {
+            loggedIn ?
             <div>
+                
+                <div>
+                    <div className="w-full bg-primary-green flex justify-center p-5 gap-4">
+                    {/* our pfp */}
+                    <img src={commentUserid?.pfp} alt="pfp" className=" aspect-square h-12 rounded-full"  />
+                    <textarea 
+                    value={commentContent || ''}
+                    onChange={(e)=>{ setCommentContent(e.target.value) }}
+                    className='bg-white focus:outline-0 resize-none w-full md:w-2/3 field-sizing-content p-2' id="comment-content" placeholder="Write your comments here..."></textarea>
+                    <button 
+                    onClick={submitComment}
+                    className="cursor-pointer bg-primary-blue rounded-2xl text-white w-20 ">Submit</button>
+                    </div>
 
-                <div className="w-full bg-primary-green flex justify-center p-5 gap-4">
-                {/* our pfp */}
-                <img src={commentUserid?.pfp} alt="pfp" className=" aspect-square h-12 rounded-full"  />
-                <textarea 
-                value={commentContent || ''}
-                onChange={(e)=>{ setCommentContent(e.target.value) }}
-                className='bg-white focus:outline-0 resize-none w-full md:w-2/3 field-sizing-content p-2' id="comment-content" placeholder="Write your comments here..."></textarea>
-                <button 
-                onClick={submitComment}
-                className="cursor-pointer bg-primary-blue rounded-2xl text-white w-20 ">Submit</button>
                 </div>
 
+                <CommentSection postid={posts?.postID} refresh={refresh} />
             </div>
 
-            <CommentSection postid={posts?.postID} refresh={refresh} />
+            :
 
+            <div>
 
+            </div>
+            }
 
 
             {errorMsg && <ErrorBox message={errorMsg} onDismiss={()=>setErrorMsg('')} /> }

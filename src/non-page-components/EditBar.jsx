@@ -6,10 +6,6 @@ export default function EditBar({role}) {
 
     const navigate = useNavigate()
     const [User, setUser] = useState()
-    
-
-    
-    
 
 
     useEffect(()=>{
@@ -23,6 +19,10 @@ export default function EditBar({role}) {
 
     return (
     <div>
+
+        {role === null &&
+         <div></div>
+        }
 
         {role === 'ADMIN' && 
         <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
@@ -45,9 +45,6 @@ export default function EditBar({role}) {
             </div>
         </div>
         }
-        
-
-        {role === 'STUDENT' && <div></div>}
 
 
         {role === 'STAFF' && 
