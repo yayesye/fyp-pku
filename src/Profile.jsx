@@ -18,7 +18,7 @@ export default function Profile () {
 
     const [loading, setloading] = useState(true)
 
-    const [Del, setDel] = useState(false)
+    const [DelPID, setDelPID] = useState(false)
     const [Success, setSuccess] = useState(false)
 
 
@@ -54,7 +54,7 @@ export default function Profile () {
         const {error} = await supabase.from('BulletinPosts').delete('*').eq('postID',postid)
         if (error) console.log('Error: ',error)
 
-        setDel(false)
+        setDelPID(null)
         setSuccess(true)
 
     }    
@@ -110,12 +110,12 @@ export default function Profile () {
                                 <span className=" text-white">Edit</span>
                             </button>
                             <button 
-                            onClick={()=>setDel(true)}
+                            onClick={()=>setDelPID(p.postIDg)}
                             value="Delete"  className="p-2 rounded-md bg-red-700 min-w-25 cursor-pointer hover:bg-red-500" >
                                 <i className="fas fa-trash mr-2 invert"></i>
                                 <span className=" text-white">Delete</span>
                             </button>
-                            {Del && <NeutralBox message={'Delete Posts?'} Yes={()=>handleDelete(p.postID)} No={ ()=>setDel(false) } />}
+                            {DelPID && <NeutralBox message={'Delete Posts?'} Yes={()=>handleDelete(p.postID)} No={ ()=>setDelPID(null) } />}
                             {Success && <GoodBox message='Post Deleted!' onDismiss={ ()=> {setSuccess(false), fetchProfilePosts()} } />}
                         </div>
                         }

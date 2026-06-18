@@ -18,7 +18,7 @@ export default function DeletePosts () {
 
     const [loading, setloading] = useState(true)
 
-    const [Del, setDel] = useState(false)
+    const [DelPID, setDelPID] = useState(false)
     const [Success, setSuccess] = useState(false)
 
 
@@ -55,7 +55,8 @@ export default function DeletePosts () {
         const {error} = await supabase.from('BulletinPosts').delete('*').eq('postID',postid)
         if (error) console.log('Error: ',error)
 
-        setDel(false)
+        setDelPID(null)
+        // setDel(false)
         setSuccess(true)
 
     }    
@@ -111,25 +112,19 @@ export default function DeletePosts () {
 
                         
                         <div className="flex justify-center mt-auto items-end gap-10">
-                            {/* <button value="Edit"
-                            onClick={()=>navigate(`/edit/${p.postID}`)}
-                            className="p-2 rounded-md bg-gray-500 min-w-25 cursor-pointer hover:bg-gray-700" >
-                                <i className="fas fa-edit mr-2 invert"></i>
-                                <span className=" text-white">Edit</span>
-                            </button> */}
                             <button 
-                            onClick={()=>setDel(true)}
+                            onClick={()=>setDelPID(p.postID)}
                             value="Delete"  className="p-2 rounded-md bg-red-700 min-w-25 cursor-pointer hover:bg-red-500" >
                                 <i className="fas fa-trash mr-2 invert"></i>
                                 <span className=" text-white">Delete Post</span>
                             </button>
-                            {Del && <NeutralBox message={'Delete Posts?'} Yes={()=>handleDelete(p.postID)} No={ ()=>setDel(false) } />}
-                            {Success && <GoodBox message='Post Deleted!' onDismiss={ ()=> {setSuccess(false), fetchProfilePosts()} } />}
                         </div>
-                        
 
+                        {DelPID === p.postID && <NeutralBox message={'Delete Posts?'} Yes={()=>handleDelete(p.postID)} No={ ()=>setDelPID(null) } />}
+                        {Success && <GoodBox message='Post Deleted!' onDismiss={ ()=> {setSuccess(false), fetchProfilePosts()} } />}
 
                     </div>
+                    
                 ))}
             </div>
 
