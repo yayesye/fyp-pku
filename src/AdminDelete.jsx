@@ -52,8 +52,10 @@ export default function DeletePosts () {
     },[])
 
     async function handleDelete(postid) {
-        const {error} = await supabase.from('BulletinPosts').delete('*').eq('postID',postid)
+        const {data, error} = await supabase.from('BulletinPosts').delete('*').eq('postID',postid).single()
         if (error) console.log('Error: ',error)
+
+        console.log(data)
 
         setDelPID(null)
         // setDel(false)
@@ -121,11 +123,12 @@ export default function DeletePosts () {
                         </div>
 
                         {DelPID === p.postID && <NeutralBox message={'Delete Posts?'} Yes={()=>handleDelete(p.postID)} No={ ()=>setDelPID(null) } />}
-                        {Success && <GoodBox message='Post Deleted!' onDismiss={ ()=> {setSuccess(false), fetchProfilePosts()} } />}
+                        
 
                     </div>
                     
                 ))}
+                {Success && <GoodBox message='Post Deleted!' onDismiss={ ()=> {setSuccess(false), fetchProfilePosts()} } />}
             </div>
 
         </div>
