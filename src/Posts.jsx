@@ -140,7 +140,7 @@ export default function Posts () {
 
 
                 {/* this is the content or paragraph */}
-                <div className="p-5 bg-white min-h-[25vw] rounded-b-xl"> <p>{posts?.description} </p> </div>
+                <div className="p-5 bg-white min-h-[25vw] rounded-b-xl whitespace-pre-wrap"> <p>{posts?.description} </p> </div>
 
 
             </div>
@@ -153,24 +153,7 @@ export default function Posts () {
             
             {
             commentUserid ?
-            // <div className="sticky bottom-0">
-            //     <div className="w-full bg-primary-green grid sm:grid-cols-3 justify-center p-2 sm:p-5 gap-4">
-            //         {/* our pfp */}
-            //         <div></div>
-            //         <div className="flex gap-2">
-            //             <img src={commentUserid?.pfp} alt="pfp" className=" aspect-square h-12 rounded-full ml-auto"  />
-            //             <textarea 
-            //             value={commentContent || ''}
-            //             onChange={(e)=>{ setCommentContent(e.target.value) }}
-            //             className='bg-white focus:outline-0 rounded-md resize-none field-sizing-content p-2' id="comment-content" placeholder="Write your comments here..."></textarea>
-            //         </div>
-            //         <button 
-            //         type="button"
-            //         onClick={submitComment}
-            //         className="cursor-pointer max-h-10 min-h-10 bg-primary-blue rounded-4xl text-white w-20 place-items-start ml-auto sm:mr-auto sm:ml-0 ">Submit</button>
-            //     </div>
-
-            // </div>
+  
 
 
             <div className="sticky w-full bottom-0 min-h-20 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.2)] p-4">

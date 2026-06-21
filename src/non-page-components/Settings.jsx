@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
+import { NeutralBox } from "./DisplayBox"
 
-export default function Settings({open, func}) {
+export default function Settings({open, func, logout}) {
 
     const [showPanel, setShowPanel] = useState(open)
     const [pushLoading, setPushLoading] = useState(false)
     const [pushEnabled, setPushEnabled] = useState(false)
+
+    const [LogOutmsg, setLogOutmsg] = useState()
 
     useEffect(() => {
         if (open) {
@@ -67,41 +70,45 @@ export default function Settings({open, func}) {
 
                 {/* Settings content */}
                 <div className=" rounded-md bg-white p-4 shadow-sm">
-                    <h2 className="font-bold text-primary-blue mb-4">Settings</h2>
+                    <h2 className="font-bold text-primary-blue text-center mb-4">Settings</h2>
 
                     {/* Dark mode toggle */}
-                    <div className="flex items-center justify-between gap-4">
+                    {/* <div className="flex items-center justify-between gap-4 pb-5">
                         <div className="flex w-full">
-                            <div className="mr-auto">
-                                <h3 className="font-semibold text-gray-700">Dark Mode</h3>
-                                <p className="text-sm text-gray-500">Switch app theme</p>
-                            </div>
+                            <h3 className="font-semibold content-center text-gray-700 mr-auto">Dark Mode</h3>
                             
-
                             <button
                                 type="button"
                                 onClick={handlePushToggle}
                                 disabled={pushLoading}
-                                className={`relative h-8 w-14 rounded-full transition-colors disabled:opacity-60 ${pushEnabled ? "bg-primary-green" : "bg-gray-400"}`}
+                                className={`relative h-7 w-14 rounded-full transition-colors disabled:opacity-60 ${pushEnabled ? "bg-primary-green" : "bg-gray-400"}`}
                                 aria-pressed={pushEnabled}
                                 aria-label="Toggle push notifications"
                             >
-
-                            
-                                <span className={`absolute left-0 top-1 h-6 w-6 rounded-full bg-white shadow transition-transform ${pushEnabled ? "translate-x-7" : "translate-x-1"}`}></span>
+                                <span className={`absolute left-0 top-1 h-5 w-5 rounded-full bg-white shadow transition-transform ${pushEnabled ? "translate-x-7" : "translate-x-1"}`}></span>
                             </button>
                         </div>
-                        {/* <button
-                            type="button"
-                            className={`relative h-8 w-14 rounded-full transition-colors`}
-                            aria-label="Toggle dark mode"
-                        >
-                            <span className={`absolute left-0 top-1 h-6 w-6 rounded-full bg-white shadow transition-transform translate-x-1`}></span>
-                        </button> */}
+                    </div> */}
+
+
+                    <div className="flex items-center justify-between gap-4 pb-3 pt-4 border-t border-gray-500">
+                        <h3 className="font-semibold text-md text-gray-700">Log Out</h3>
+                        <button 
+                        onClick={()=>setLogOutmsg("Logout?")}
+                        type="button" className="p-1.5 pr-2.5 pl-2.5 bg-red-800 rounded-lg hover:bg-red-600 text-white">Log Out</button>
                     </div>
+                    
+                    {/* <div className="flex items-center justify-between gap-4 pb-5 pt-5 border-t border-gray-500">
+                        <h3 className="font-semibold text-gray-700">Log Out</h3>
+                        <button 
+                        onClick={console.log('helo')}
+                        type="button" className="p-1.5 pr-2.5 pl-2.5 bg-gray-500 rounded-lg hover:bg-gray-800 text-white">Log Out</button>
+                    </div> */}
                 </div>
 
             </div>
+            
+            {LogOutmsg && <NeutralBox message={LogOutmsg} Yes={logout} No={()=>setLogOutmsg(null)} /> }
 
         </div>,
         document.body

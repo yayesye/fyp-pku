@@ -140,6 +140,7 @@ export default function Dashboard () {
                 <div className="ml-4">
                     <h1 className=" text-lg sm:text-xl font-bold text-primary-blue" >NewsNow</h1>
                     <h2 className=" hidden sm:block text-sm text-[#7B8794]">Universiti Malaysia Pahang Sultan Abdullah</h2>
+                    <h2 className=" sm:hidden text-sm text-[#7B8794]">UMPSA</h2>
                 </div>
 
 
@@ -150,23 +151,29 @@ export default function Dashboard () {
 
                     {/* this is the settings */}
                     <div className='mr-4 content-center '>
-                        <i className='fas fa-gear cursor-pointer text-2xl text-gray-700'
+                        <i title='Setings Panel'
+                        className='fas fa-gear cursor-pointer text-2xl text-gray-700'
                         onClick={()=>setSettingsPanel(true)}></i>
                         {/* <i className='fas fa-angle-down text-xl'></i> */}
-                        <Settings open={SettingsPanel} func={()=>setSettingsPanel(false)} />
+                        <Settings logout={handleLogout} open={SettingsPanel} func={()=>setSettingsPanel(false)} />
                     </div>
 
 
                     {/* this is the notification panel */}
                     <div className='ml-auto mr-4 content-center'>
-                        <i className='fas fa-bell text-primary-yellow cursor-pointer text-2xl'
+                        <i title='Notification Panel'
+                        className='fas fa-bell text-primary-yellow cursor-pointer text-2xl'
                         onClick={()=>setPanel(true)}></i>
                         <NotifPanel open={Panel} func={()=>setPanel(false)} />
                     </div>
 
 
                     {/* this is the name and logo */}
-                    <div className='flex justify-end group h-full cursor-pointer items-center'>
+                    <div title='Go to Profiles Page'
+                    className='flex justify-end group h-full cursor-pointer items-center'
+                    onClick={()=>navigate(`/profile/${user.userID}`)}>
+
+
 
                         <div className=' mr-4 h-full content-center '>
                             <img src={user?.pfp} className='rounded-full aspect-square h-11' alt="this the user pfp" /> 
@@ -176,10 +183,11 @@ export default function Dashboard () {
                             <div className='bg-primary-blue rounded-md pl-2 pr-2 p-1'><h2 className=" text-center text-primary-yellow font-bold text-xs"> {user && user.userRole} </h2></div>
                         </div>
 
-                        <div onClick={handleLogout} className=' hidden group-hover:flex cursor-pointer absolute top-20 w-40 right-0 bg-red-300 justify-center p-3 hover:bg-red-600 shadow'>
+                        {/* old log out function */}
+                        {/* <div onClick={handleLogout} className=' hidden group-hover:flex cursor-pointer absolute top-20 w-40 right-0 bg-red-300 justify-center p-3 hover:bg-red-600 shadow'>
                             <i className="fas fa-sign-out-alt fa-xl text-primary-blue self-center content-center h-full"></i>
                             <h2 className='font-bold inline '>Logout</h2>
-                        </div>
+                        </div> */}
                         
                     </div>
                 </div>
@@ -229,12 +237,16 @@ export default function Dashboard () {
                         onClick={() => navigate(`/posts/${p?.postID}`)}
                         className="font-bold text-primary-blue text-2xl hover:underline cursor-pointer truncate">{p.title}</h1>
 
+                        <h2 className='text-white pl-2.5 pr-2.5 p-1 mt-2 inline-block rounded-xl bg-primary-blue'>{p.Category.categoryName}</h2>
+
                         <div className='flex items-center gap-2 mt-5'>
                             <span>Made by:</span>
                             <img className='rounded-full max-h-7' src={`https://ui-avatars.com/api/?background=0033A0&color=fff&name=${p.Users?.userName[0]}`}/>
                             <p className="text-lg text-primary-blue font-bold">{p.Users?.userName}</p>
 
-                            <i 
+
+                            {/* like feature */}
+                            {/* <i 
                             className={`${isLiked ? 'fas' : 'far'} fa-heart cursor-pointer ml-auto text-2xl text-primary-blue`} 
                             onClick={() => {
                                 const newLiked = !likedPosts[p.postID]
@@ -242,7 +254,9 @@ export default function Dashboard () {
                                 handleLike(p.postID, newLiked, p.likeCount)
                             }}
                             ></i>
-                            <span>{displayCount}</span>
+                            <span>{displayCount}</span> */}
+
+
                         </div>
 
                     </div>)})}
