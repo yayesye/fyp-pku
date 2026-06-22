@@ -237,7 +237,7 @@ export default function Dashboard () {
                         onClick={() => navigate(`/posts/${p?.postID}`)}
                         className="font-bold text-primary-blue text-2xl hover:underline cursor-pointer truncate">{p.title}</h1>
 
-                        <h2 className='text-white pl-2.5 pr-2.5 p-1 mt-2 inline-block rounded-xl bg-primary-blue'>{p.Category.categoryName}</h2>
+                        <h2 className='text-white pl-2.5 pr-2.5 p-1 mt-3 inline-block rounded-xl bg-primary-blue'>{p.Category.categoryName}</h2>
 
                         <div className='flex items-center gap-2 mt-5'>
                             <span>Made by:</span>

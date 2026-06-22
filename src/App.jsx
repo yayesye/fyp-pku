@@ -46,7 +46,7 @@ export default function App() {
 
           <Route path="create" element={ <Protected>  <CreatePosts />  </Protected>  } />
           <Route path="edit/:postid" element={ <Protected>  <EditPosts />  </Protected>  } />
-          <Route path='profile/:userid' element={ <Protected>  <Profile />  </Protected> } />
+          <Route path='profile/:userid' element={  <Profile />  } />
           <Route path="announcement" element={ <Protected>  <MakeAnnouncement />  </Protected>  } />
           <Route path='delete' element={<DeletePosts />} />
 

@@ -126,15 +126,17 @@ export default function Posts () {
                 
 
                 {/* this is the title of the post */}
-                <div className="h-15 content-center bg-primary-blue " >
-                    <h1 className="font-bold text-center text-white truncate ml-3 mr-3 " >{posts?.title}</h1>
+                <div className="min-h-15 content-center bg-primary-blue " >
+                    <h1 className="font-bold text-center text-white break-word ml-3 mr-3 " >{posts?.title}</h1>
                     {/* <h1 className=" font-bold text-center"> {post.title} </h1> */}
                 </div>
 
-                <div className='p-2 flex content-center gap-3 bg-gray-200 '>
-                    <h3 className=" content-center">Made by: </h3>
+                <div className='p-2 flex content-center gap-2 bg-gray-200 '>
+                    <h3 className=" content-center mr-1">Made by: </h3>
                     <img src={pfp && pfp} className='rounded-full aspect-square h-8' alt="this the user pfp" /> 
-                    <h1 className="text-md font-bold text-primary-blue content-center">{posts?.Users.userName}</h1> 
+                    <h1 
+                    onClick={()=>navigate(`/profile/${posts?.Users.userID}`)}
+                    className="text-md font-bold text-primary-blue content-center hover:underline cursor-pointer">{posts?.Users.userName}</h1> 
                     <h1 className="ml-auto content-center"><strong className="ml-2">{posts?.publishDate}</strong> </h1>
                 </div>         
 
@@ -156,7 +158,7 @@ export default function Posts () {
   
 
 
-            <div className="sticky w-full bottom-0 min-h-20 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.2)] p-4">
+            <div className=" w-full bottom-0 min-h-20 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.2)] p-4">
                 <div className="max-w-3xl mx-auto flex  gap-3">
                     
                     {/* Avatar */}

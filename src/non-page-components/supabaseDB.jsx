@@ -42,11 +42,12 @@ export async function fetchAllPosts() {
         .select(`
             *,
             FileAttachment(fileURL),
-            Users(userID, userName),
+            Users(userID, userName, userRole),
             Category(categoryName)
             `)
         .order('created_at', {ascending: false})
 
+    
 
     if (error) console.log('Error: ',error)
 

@@ -13,7 +13,6 @@ export default function Profile () {
     const param = useParams()
 
     const [userProfile, setProfile] = useState()
-    const [pfp,setpfp] = useState()
     const [ProfilePosts, setProfilePosts] = useState()
 
     const [loading, setloading] = useState(true)
@@ -25,16 +24,26 @@ export default function Profile () {
 
     
     // console.log(param.userid)
+    async function fetchPoster() {
+        const {data, error} = await supabase.from('Users').select('userID, userName, userRole').eq('userID',param.userid).single()
+
+        if (error) console.error('Error:',error)
+
+        if (data) data.userpfp = `https://ui-avatars.com/api/?background=264688&color=fff&name=${data?.userName[0]}`
+
+        return data
+    }
 
     async function fetchProfilePosts() {
 
-        setProfile(await fetchCurrentUser())
+        setProfile(await fetchPoster())
 
         // this is the old fetch from supabase, now we just use the fetch all post from supabase component and filter
         // const {data, error} = await supabase.from('BulletinPosts').select('postID, title, status, FileAttachment(fileURL)').eq('userID',param.userid)
 
         const fetchPosts = await fetchAllPosts()
         const data = fetchPosts?.filter(p => p.userID === param.userid)
+
         setProfilePosts(data)
     }
 
@@ -59,7 +68,6 @@ export default function Profile () {
 
     }    
 
-    // console.log(ProfilePosts)
 
     if (loading) return <Loading />
 
@@ -76,12 +84,11 @@ export default function Profile () {
 
 
             <div className="flex flex-col items-center text-center pt-10 pb-10">
-                <img src={userProfile?.pfp} className="rounded-full max-w-20" />
+                <img src={userProfile?.userpfp} className="rounded-full max-w-20" />
                 <h1 className="font-bold text-2xl"> {userProfile?.userName} </h1>
                 <h2 className=" text-xl"> {userProfile?.userRole} </h2>
             </div>
 
-            {/* {console.log(ProfilePosts)} */}
             <div className="p-5 flex gap-5 flex-wrap">
                 {
                 ProfilePosts?.map(p => (
